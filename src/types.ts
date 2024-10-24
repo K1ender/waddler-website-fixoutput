@@ -1,9 +1,11 @@
+import { type CSSProperties } from "react";
 import * as React from "react";
 
 export type ErrorCallback = (error: Error | FetchError) => void;
 export type LoadCallback = (src: string, isCached: boolean) => void;
 export type PlainObject<T = unknown> = Record<string | number | symbol, T>;
 export type PreProcessorCallback = (code: string) => string;
+
 export interface SVGProps
   extends Omit<React.SVGProps<SVGElement>, "onLoad" | "onError" | "ref"> {
   baseURL?: string;
@@ -38,13 +40,6 @@ export interface StorageItem {
   status: string;
 }
 
-type ImageSrc =
-  | string
-  | {
-      darkThemeSrc: string;
-      lightThemeSrc: string;
-    };
-
 export interface ICard {
   title: string;
   imageSrc: ImageSrc;
@@ -57,3 +52,58 @@ export interface ICard {
 export interface ICards {
   [key: string]: ICard;
 }
+
+type ImageSrc =
+  | string
+  | {
+      darkThemeSrc: string;
+      lightThemeSrc: string;
+    };
+
+export interface ISupportingElement {
+  imageSrc: ImageSrc;
+  sponsorUrl?: string;
+  lightStyle?: SVGProps;
+  darkStyle?: SVGProps;
+}
+
+export interface IHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+export interface TreeNode {
+  name: string;
+  type: string;
+  title: string;
+  children: TreeNode[];
+  items?: TreeNode[];
+}
+
+export interface ISponsor {
+  tier: {
+    name: string;
+    isOneTime: boolean;
+  };
+  sponsorEntity: {
+    __typename: string;
+    login: string;
+    name: string;
+    avatarUrl: string;
+  };
+  followLink?: boolean;
+  popover?: string;
+  createdAt: string;
+  isActive: boolean;
+  imageType?: ImageType;
+  lightStyle?: CSSProperties;
+  darkStyle?: CSSProperties;
+}
+
+export enum ImageType {
+  IMAGE = "image",
+  SVG = "svg",
+}
+
+declare module "*.module.css";

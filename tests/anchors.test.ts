@@ -1,4 +1,4 @@
-import handleAnchorHighlighting from "@/utils/handleAnchorHighlighting";
+// import handleAnchorHighlighting from "@/utils/handleAnchorHighlighting";
 
 interface Props {
   viewportHeight: number;

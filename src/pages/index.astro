@@ -1,8 +1,37 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import LandingPage from '@components/LandingPage/LandingPage.astro';
+import Layout from "../ui/Layout.astro";
+import LandingPage from "@components/LandingPage/LandingPage.astro";
 ---
 
 <Layout title="Waddler">
-	<LandingPage />
+  <div class="wrap">
+    <div class="title">Waddler</div>
+  </div>
+
+  <style>
+    .wrap {
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      color: #222;
+    }
+
+    html[class~="dark"] .wrap {
+      color: rgb(226, 232, 240);
+    }
+
+    .title {
+      font-size: 48px;
+      margin: 120px 0;
+      text-align: center;
+      font-weight: 600;
+    }
+  </style>
+  <script>
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("sidebar-scroll", "0");
+    });
+  </script>
 </Layout>
