@@ -79,12 +79,5 @@
   ["dynamic-query-building", "Dynamic query building"],
   ["read-replicas", "Read Replicas"],
   ["custom-types", "Custom types"],
-  ["goodies", "Goodies"],
-  "Extensions",
-  ["prisma", "Prisma"],
-  ["eslint-plugin", "ESLint Plugin"],
-  ["zod", "drizzle-zod"],
-  ["typebox", "drizzle-typebox"],
-  ["valibot", "drizzle-valibot"],
-  ["graphql", "drizzle-graphql"]
+  ["goodies", "Goodies"]
 ]

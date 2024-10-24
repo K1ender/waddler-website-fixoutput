@@ -2,13 +2,14 @@
 import { getCollection } from 'astro:content';
 
 import Link from '@mdx/Link.astro';
-import CustomHeader from '@components/layout/CustomHeader.astro';
+
 import DocsLayout from '@/ui/DocsLayout.astro';
+import CustomHeader from '@/ui/components/CustomHeader.astro';
 
 export async function getStaticPaths() {
   const metaFiles = await import.meta.glob('../content/**/*.json');
   const slugs: string[] = [];
-  const regex = /\.\.\/content\/documentation\/(.*?)\/_meta\.json/;
+  const regex = /\.\.\/content\/(.*?)\/_meta\.json/;
   
   for(const meta in metaFiles) {
     const {default: parsed} = await metaFiles[meta]() as any;
@@ -16,7 +17,6 @@ export async function getStaticPaths() {
     const metaSlug = meta.match(regex);
     if (metaSlug) {
       const extractedText = metaSlug[1];
-
       parsed.forEach((key) => {
         if(Array.isArray(key)) {
           slugs.push(`${extractedText}/${key[0]}`);
@@ -24,12 +24,11 @@ export async function getStaticPaths() {
       })
     }
   }
-
-  const blogEntries = await getCollection("documentation", (entry) => {
-    return slugs.includes(entry.slug);
+  const blogEntries = await getCollection("docs", (entry) => {
+    return slugs.includes(`docs/${entry.slug}`);
   });
   return blogEntries.map(entry => ({
-    params: { slug: entry.slug }, props: { entry, frontmatter: entry.data },
+    params: { slug: `docs/${entry.slug}` }, props: { entry, frontmatter: entry.data },
   }));
 }
 

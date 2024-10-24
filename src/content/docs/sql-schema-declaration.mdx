@@ -123,8 +123,6 @@ Let's go one by one and check how the schema should be defined with drizzle
 A table in Drizzle should be defined with at least 1 column, the same as it should be done in database. There is one important thing to know,
 there is no such thing as a common table object in drizzle. You need to choose a dialect you are using, PostgreSQL, MySQL or SQLite
 
-![](@/assets/images/table-structure.svg)
-
 <CodeTabs items={["PostgreSQL Table", "MySQL Table", "SQLite Table"]}>
 ```ts copy
 import { pgTable, integer } from "drizzle-orm/pg-core"
@@ -274,7 +272,6 @@ export const posts = pgTable('posts', {
 \
 In PostgreSQL, there is an entity called a `schema` (which we believe should be called `folders`). This creates a structure in PostgreSQL:
 
-![](@/assets/images/postgresql-db-structure.png)
 
 You can manage your PostgreSQL schemas with `pgSchema` and place any other models inside it.
 
@@ -302,7 +299,6 @@ In MySQL, there is an entity called `Schema`, but in MySQL terms, this is equiva
 
 You can define them with `drizzle-orm` and use them in queries, but they won't be detected by `drizzle-kit` or included in the migration flow
 
-![](@/assets/images/mysql-db-structure.png)
 
 Define the schema you want to manage using Drizzle
 ```ts
@@ -326,7 +322,6 @@ export const users = customSchema.table('users', {
 \
 In SQLite, there is no concept of a schema, so you can only define tables within a single SQLite file context
 
-![](@/assets/images/sqlite-db-structure.png)
 </Tab>
 </Tabs>
 

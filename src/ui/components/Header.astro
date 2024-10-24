@@ -1,6 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import DuckImage from '@/assets/images/duck_emoji.png';
 import ThemeSelector from "./ThemeSelector.astro";
-import Logo from "./Logo.astro";
 import GithubStars from "./GithubStars.astro";
 import DocsIcon from "../../assets/icons/DocsIcon.astro";
 ---
@@ -8,7 +9,10 @@ import DocsIcon from "../../assets/icons/DocsIcon.astro";
 <div class="header" id="header">
   <div class="header_content">
     <div class="header__logo">
-      <Logo />
+      <a href="/" class="logo-wrap">
+        <Image class="logo" src={DuckImage} alt="Duck emoji" />
+        Waddler
+      </a>
       <a class="docs-logo" href="/docs/overview">
         <div class="docs-logo-icon"><DocsIcon/></div>
         <span>Documentation</span>
@@ -71,7 +75,7 @@ import DocsIcon from "../../assets/icons/DocsIcon.astro";
     position: fixed;
       left: 0;
       right: 0;
-    top: 40px;
+    top: 0px;
   }
 
   .header_content {
@@ -94,6 +98,20 @@ import DocsIcon from "../../assets/icons/DocsIcon.astro";
     flex: 1;
     font-weight: 600;
     gap: 10px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    cursor: pointer;
+    min-height: 48px;
+    width: fit-content;
+  }
+
+  .logo {
+    width: 36px;
   }
 
   .docs-logo {

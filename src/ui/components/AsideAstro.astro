@@ -1,6 +1,7 @@
 ---
-import type { IHeading, TreeNode } from "../../types/astro";
-import CollapseToggleButton from "./docs-sidebar/CollapseToggleButton.astro";
+import type { IHeading, TreeNode } from "@/types";
+import CollapseToggleButton from "./CollapseToggleButton.astro";
+
 
 interface Props {
   headings?: IHeading[];
@@ -70,14 +71,14 @@ let i = 0;
               <div
                 class={"nav-items-collapsable"}
                 id={n.title}
-                data-active-inner-item={n.items.some(c => isActive(`${t.name}/${c.name}`)) ? 1 : 0}
-                style={`max-height: ${calculateMaxHeight(n.items)}px`}
+                data-active-inner-item={n.items?.some(c => isActive(`${t.name}/${c.name}`)) ? 1 : 0}
+                style={`max-height: ${calculateMaxHeight(n.items!)}px`}
               >
                 <div class="nav-separator nav-separator-collapsable">
                   {n.title}
                   <CollapseToggleButton />
                 </div>
-                {n.items.map((n) => (
+                {n.items?.map((n) => (
                   <>
                     {n.type === "dot-separator" && (
                       <div class="dot-separator"></div>
@@ -92,24 +93,6 @@ let i = 0;
                           "nav-item-1",
                         ]}
                         href={`/${t.name}/${n.name}`}
-                      >
-                        {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                          <code>{n.title.replaceAll('`', '')}</code>
-                        ) : (
-                          n.title
-                        )}
-                      </a>
-                    )}
-                    {n.type === "subDir" && (
-                      <a
-                        data-nav-index={i++}
-                        class:list={[
-                          isActive(`${t.name}/${n.name}`)
-                            ? "nav-item--active"
-                            : "nav-item",
-                          "nav-item-1",
-                        ]}
-                        href={`/${t.name}/${n.name}/${n.children?.[0].name}`}
                       >
                         {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
                           <code>{n.title.replaceAll('`', '')}</code>
@@ -210,24 +193,6 @@ let i = 0;
                 )}
               </a>
             )}
-            {n.type === "subDir" && (
-              <a
-                data-nav-index={i++}
-                class:list={[
-                  isActive(`${t.name}/${n.name}`)
-                    ? "nav-item--active"
-                    : "nav-item",
-                  "nav-item-1",
-                ]}
-                href={`/${t.name}/${n.name}/${n.children?.[0].name}`}
-              >
-                {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                  <code>{n.title.replaceAll('`', '')}</code>
-                ) : (
-                  n.title
-                )}
-              </a>
-            )}
             {n.type === "withDialects" && (
               <a
                 data-nav-index={i++}
@@ -297,8 +262,7 @@ let i = 0;
 </div>
 <script>
   import throttle from "lodash.throttle";
-  import handleAnchorHighlighting from "@/utils/handleAnchorHighlighting";
-  import updateDialectLinks from "@/utils/updateDialectLinks";
+  import {handleAnchorHighlighting, updateDialectLinks} from "@/utils";
 
   document.addEventListener("astro:after-swap", () => {
     let expandedSections: string[] = JSON.parse(localStorage.getItem('expandedSections'));

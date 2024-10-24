@@ -1,8 +1,10 @@
 ---
-import type { IHeading, TreeNode } from "../../../types/astro";
-import AsideSocials from "../AsideSocials.astro";
-import SidebarContentWrap from "../SidebarContentWrap.astro";
-import ThemeSelectorMobile from "../ThemeSelectorMobile.astro";
+import type { IHeading, TreeNode } from '@/types';
+import SidebarContentWrap from './components/SidebarContentWrap.astro';
+import ThemeSelectorMobile from './components/ThemeSelectorMobile.astro';
+import AsideSocials from './components/AsideSocials.astro';
+
+
 
 interface Props {
   tree: TreeNode[];
@@ -19,10 +21,10 @@ const { tree, headings, forLanding, customSlug } = Astro.props;
   <div class="aside-content aside-scroll scrollbar">
     <SidebarContentWrap filteredHeadings={headings} slug={customSlug || slug} tree={tree} forLanding={forLanding} />
     <ThemeSelectorMobile />
-    <AsideSocials />
+    <!-- <AsideSocials /> -->
   </div>
 </div>
-<script src="./index.ts"/>
+<script src="./docs-sidebar/index.ts"/>
 <style is:global>
   html[class~="dark"] .aside {
     border-right: 1px solid #303030;
@@ -51,8 +53,8 @@ const { tree, headings, forLanding, customSlug } = Astro.props;
   }
 
   .aside-scroll {
-    height: calc(100dvh - 104px);
-    padding: 0 16px 0 0;
+    height: calc(100dvh - 64px);
+    padding: 0 16px 80px 0;
     overscroll-behavior: contain;
   }
 
@@ -65,8 +67,8 @@ const { tree, headings, forLanding, customSlug } = Astro.props;
     .aside {
       z-index: 100;
       position: fixed;
-      top: 104px;
-      height: calc(100% - 104px);
+      top: 64px;
+      height: calc(100% - 64px);
       left: 0;
       right: 0;
       width: 100%;

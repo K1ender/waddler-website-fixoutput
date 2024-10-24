@@ -8,7 +8,7 @@ import { makeComponentNode } from "./utils/makeComponentNode";
 
 const CodeSnippetTagname = "AutoImportedCodeSnippet";
 export const codeSnippetAutoImport: Record<string, [string, string][]> = {
-  "/src/components/layout/CodeSnippet/CodeSnippet.astro": [
+  "/src/ui/code-snippet/CodeSnippet.astro": [
     ["default", CodeSnippetTagname],
   ],
 };

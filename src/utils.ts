@@ -90,18 +90,18 @@ interface Props {
 
 export const getContentTree = async (props: Props) => {
   const [metaFiles, mdxFiles] = await Promise.all([
-    import.meta.glob<Array<string | string[]>>("../content/**/*.json"),
-    import.meta.glob<Array<string | string[]>>("../content/**/*.mdx"),
+    import.meta.glob<Array<string | string[]>>("./content/**/*.json"),
+    import.meta.glob<Array<string | string[]>>("./content/**/*.mdx"),
   ]);
 
   const mdxPaths = Object.keys(mdxFiles);
 
-  const regex = /\.\.\/content\/documentation\/(.*?)\/_meta\.json/;
+  const regex = /\.\/content\/docs\/_meta\.json/;
 
   const navItems: SidebarItem[] = [];
 
   const getTypeOfFile = (value: string): SidebarItem["type"] => {
-    if (mdxPaths.includes(`../content/documentation/${value}.mdx`)) {
+    if (mdxPaths.includes(`./content/docs/${value}.mdx`)) {
       return "mdx";
     }
     if (mdxPaths.some((path) => path.includes(value))) {
@@ -115,13 +115,12 @@ export const getContentTree = async (props: Props) => {
 
     const metaSlug = meta.match(regex);
     if (metaSlug) {
-      const extractedText = metaSlug[1];
       parsed.forEach((key, i) => {
         if (Array.isArray(key)) {
           navItems.push({
-            type: getTypeOfFile(`${metaSlug[1]}/${key[0]}`),
+            type: getTypeOfFile(`${key[0]}`),
             title: key[1],
-            path: `${extractedText}/${key[0]}`,
+            path: `docs/${key[0]}`,
           });
         }
         if (typeof key === "string") {
@@ -129,27 +128,25 @@ export const getContentTree = async (props: Props) => {
             navItems.push({
               type: "dot-separator",
               title: "dot-separator",
-              path: `${extractedText}/${key}${i}`,
+              path: `docs/${key}${i}`,
             });
           } else if (key.includes("::")) {
             navItems.push({
               type: "collapsable",
               title: key.replace("::", ""),
-              path: `${extractedText}/${key}`,
+              path: `docs/${key}`,
             });
           } else {
             navItems.push({
               type: "separator",
               title: key,
-              path: `${extractedText}/${key}`,
+              path: `docs/${key}`,
             });
           }
         }
       });
     }
   }
-
-  const dialectNames = ["sqlite", "pg", "mysql"];
 
   const buildTree = (items: SidebarItem[]): TreeNode[] => {
     const tree: TreeNode[] = [];
@@ -175,12 +172,6 @@ export const getContentTree = async (props: Props) => {
 
     const findDialects = (node: TreeNode) => {
       if (node.children) {
-        const dialects = node.children.filter((child) =>
-          dialectNames.includes(child.name),
-        );
-        if (dialects.length > 0) {
-          node.type = "withDialects";
-        }
         node.children.forEach((child) => findDialects(child));
       }
     };
@@ -263,7 +254,7 @@ export const getMonthLabel = (startDate: string): string => {
   }
 };
 
-interface Props {
+interface AnchorProps {
   viewportHeight: number;
   anchors: {
     id: string;
@@ -272,7 +263,7 @@ interface Props {
   scrollTop: number;
 }
 
-export const handleAnchorHighlighting = (props: Props) => {
+export const handleAnchorHighlighting = (props: AnchorProps) => {
   const activeAnchors: string[] = [];
 
   const { anchors } = props;
