@@ -22,8 +22,13 @@ import Npx from "@mdx/Npx.astro"
 
 Drizzle Kit lets you declare configuration options in `TypeScript` or `JavaScript` configuration files.
 
+```text
+drizzle.config.ts
+```
+
 <Section>
-```plaintext {5}
+```plaintext {5} nocopy
+// [!code focus:3]
 📦 <project root>
  ├ ...
  ├ 📂 drizzle
@@ -58,7 +63,7 @@ export default defineConfig({
 </Section>
 
 Example of an extended config file
-```ts collapsable
+```ts  filename="drizzle.config.ts"
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({

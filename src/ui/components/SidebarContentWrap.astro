@@ -1,5 +1,5 @@
 ---
-import type { IHeading, TreeNode } from '@/types/astro';
+import type { IHeading, TreeNode } from '@/types';
 import AsideAstro from './AsideAstro.astro';
 
 interface Props {
@@ -163,6 +163,8 @@ html[class~="dark"] .nav_sticky {
   .section-collapse-button {
       opacity: 0;
       pointer-events: none;
+      border: none !important;
+      background: none !important;
   }
 
   .expanded {

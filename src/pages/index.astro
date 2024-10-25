@@ -1,14 +1,13 @@
 ---
-import { Image } from "astro:assets";
 import Layout from "../ui/Layout.astro";
-import DuckImage from '@/assets/images/duck_emoji.png';
+import Showcase from "@/content/landing/showcase.mdx";
 ---
 
 <Layout title="Waddler">
   <div class="wrap">
     <div class="landing__wrap">
       <div class="landing__title-wrap">
-        <Image class="landing__shop-emoji" src={DuckImage} alt="Duck emoji" />
+        <span class="landing__duck-emoji">🦆</span>
         <div class="landing__title">Waddler</div>
       </div>
       <div class="landing__description">
@@ -37,39 +36,10 @@ import DuckImage from '@/assets/images/duck_emoji.png';
         >
       </a>
     </div>
-    <!-- <Showcase /> -->
+    <Showcase />
   </div>
-  <script is:inline>
-    const codeBlocks = document.querySelectorAll(".code");
-    codeBlocks.forEach((codeBlock) => {
-      Array.from(codeBlock.children).forEach((child, index) => {
-        child.classList.toggle("hidden", index !== 0);
-      });
-    });
+  <script>
   
-    document
-      .querySelectorAll("[data-change-bigcode-tab-btn]")
-      .forEach((button) => {
-        button.addEventListener("click", (e) => {
-          const target = e.target;
-          const parent = target.parentElement;
-          const index = Array.from(parent?.children || []).indexOf(target);
-          const code = parent.nextElementSibling;
-  
-          if (code) {
-            Array.from(code.children).forEach((child, codeIndex) => {
-              child.classList.toggle("hidden", codeIndex !== index);
-            });
-          }
-          Array.from(parent.children).forEach((child, codeIndex) => {
-            child.classList.toggle("bigcodetabs_tab", codeIndex !== index);
-            child.classList.toggle(
-              "bigcodetabs_tab--active",
-              codeIndex === index,
-            );
-          });
-        });
-      });
   </script>
   <style>
     .wrap {
@@ -102,9 +72,9 @@ import DuckImage from '@/assets/images/duck_emoji.png';
       color: #e2e8f0;
     }
 
-    .landing__shop-emoji {
-      width: 36px;
-      height: 36px;
+    .landing__duck-emoji {
+      font-size: 36px;
+      line-height: 36px;
     }
 
     .landing__description {

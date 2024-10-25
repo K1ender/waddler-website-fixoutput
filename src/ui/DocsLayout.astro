@@ -1,16 +1,13 @@
-
 ---
-import type { IHeading } from '@/types';
-import { getContentTree } from '@/utils';
-import BaseHead from './BaseHead.astro';
-import GlobalStyles from './components/GlobalStyles.astro';
-import MDXStyles from './components/MDXStyles.astro';
-import Header from './components/Header.astro';
-import DocsSidebar from './DocsSidebar.astro';
-import RightAside from './components/RightAside.astro';
-import EndOfContent from './components/EndOfContent.astro';
-
-
+import type { IHeading } from "@/types";
+import { getContentTree } from "@/utils";
+import BaseHead from "./BaseHead.astro";
+import GlobalStyles from "./components/GlobalStyles.astro";
+import MDXStyles from "./components/MDXStyles.astro";
+import Header from "./components/Header.astro";
+import DocsSidebar from "./DocsSidebar.astro";
+import RightAside from "./components/RightAside.astro";
+import EndOfContent from "./components/EndOfContent.astro";
 
 interface Props {
   customTitle?: string;
@@ -29,16 +26,22 @@ const { tree, filteredHeadings, title } = await getContentTree({
 
 <!doctype html>
 <html lang="en">
-  <BaseHead title={`Waddler - ${customTitle || title}`} description={description} />
+  <BaseHead
+    title={`Waddler - ${customTitle || title}`}
+    description={description}
+  />
   <GlobalStyles />
   <body class="banner-shown">
     <MDXStyles />
     <Header />
     <div class="fixed-container">
       <div class="fixed-elements">
-        <DocsSidebar tree={tree} customSlug={customSlug} headings={filteredHeadings} />
-        <div class="dialects-container">
-        </div>
+        <DocsSidebar
+          tree={tree}
+          customSlug={customSlug}
+          headings={filteredHeadings}
+        />
+        <div class="dialects-container"></div>
         <div class="right-aside-container">
           <RightAside />
         </div>
@@ -51,33 +54,33 @@ const { tree, filteredHeadings, title } = await getContentTree({
       </div>
     </main>
     <style is:global>
-        body {
-            margin-top: 64px !important;
-        }
+      body {
+        margin-top: 64px !important;
+      }
 
-        .fixed-container {
-            position: fixed;
-            top: 64px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 99;
-            pointer-events: none;
-        }
+      .fixed-container {
+        position: fixed;
+        top: 64px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+        pointer-events: none;
+      }
 
-        .fixed-elements {
-            max-width: 1440px;
-            width: 100%;
-            justify-content: space-between;
-            display: flex;
-            margin: 0 auto;
-            padding-left: 24px;
-            padding-right: 22px;
-        }
+      .fixed-elements {
+        max-width: 1440px;
+        width: 100%;
+        justify-content: space-between;
+        display: flex;
+        margin: 0 auto;
+        padding-left: 24px;
+        padding-right: 22px;
+      }
 
-        .right-aside-container {
-            pointer-events: all;
-        }
+      .right-aside-container {
+        pointer-events: all;
+      }
 
       .navigation_nav_container_blur {
         -webkit-backdrop-filter: blur(12px);
@@ -123,11 +126,11 @@ const { tree, filteredHeadings, title } = await getContentTree({
       }
 
       .dialects-container {
-          padding-left: 48px;
-          padding-right: 48px;
-          padding-top: 1rem;
-          overflow-x: hidden;
-          width: 100%;
+        padding-left: 48px;
+        padding-right: 48px;
+        padding-top: 1rem;
+        overflow-x: hidden;
+        width: 100%;
       }
 
       @media screen and (max-width: 1279px) {
@@ -137,8 +140,8 @@ const { tree, filteredHeadings, title } = await getContentTree({
         }
 
         .dialects-container {
-            padding-left: 16px;
-            padding-right: 16px;
+          padding-left: 16px;
+          padding-right: 16px;
         }
       }
 
@@ -148,17 +151,16 @@ const { tree, filteredHeadings, title } = await getContentTree({
         }
 
         .documentation-container {
-            padding-right: 24px;
+          padding-right: 24px;
         }
 
         .documentation-content {
-            padding-right: 0;
+          padding-right: 0;
         }
 
-          .dialects-container {
-              padding-right: 0;
-          }
-
+        .dialects-container {
+          padding-right: 0;
+        }
       }
 
       @media screen and (max-width: 768px) {
@@ -169,30 +171,30 @@ const { tree, filteredHeadings, title } = await getContentTree({
           width: 100%;
         }
 
-          .dialects-container {
-              padding-left: 16px;
-              padding-right: 16px;
-          }
+        .dialects-container {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
 
-          .documentation-container {
-             padding: 0;
-          }
+        .documentation-container {
+          padding: 0;
+        }
 
-          .fixed-elements {
-              padding: 0;
-          }
+        .fixed-elements {
+          padding: 0;
+        }
       }
     </style>
     <style>
-        @media screen and (max-width: 1024px) {
-            .right-aside-container {
-                display: none;
-            }
+      @media screen and (max-width: 1024px) {
+        .right-aside-container {
+          display: none;
         }
+      }
     </style>
     <script>
       const hash = window.location.hash;
-      if (hash !== '') {
+      if (hash !== "") {
         const targetElement = document.querySelector(hash);
         if (targetElement) {
           setTimeout(() => targetElement.scrollIntoView(), 10);
@@ -201,91 +203,109 @@ const { tree, filteredHeadings, title } = await getContentTree({
     </script>
     <script is:inline>
       const changeNpmTab = () => {
-        const packageManagers = ['npm', 'yarn', 'pnpm', 'bun'];
+        const packageManagers = ["npm", "yarn", "pnpm", "bun"];
 
         let packageManagerIndex = packageManagers.indexOf(packageManager);
 
         const updateUI = (index) => {
           npmContent.forEach((element) => {
             Array.from(element.children).forEach((child, i) => {
-              child.classList.toggle('hidden', i !== index);
+              child.classList.toggle("hidden", i !== index);
             });
           });
           npmTabs.forEach((element) => {
             Array.from(element.children).forEach((child, i) => {
-              child.classList.toggle('npm__tab--active', i === index);
+              child.classList.toggle("npm__tab--active", i === index);
             });
           });
 
-          npxSelectResizer.querySelector('.line span').innerText = packageManagers[index]
+          npxSelectResizer.querySelector(".line span").innerText =
+            packageManagers[index];
 
           npxSelects.forEach((element) => {
             element.value = index;
-            element.style.width = `${npxSelectResizer.offsetWidth}px`
+            element.style.width = `${npxSelectResizer.offsetWidth}px`;
           });
         };
 
-        const npmContent = document.querySelectorAll('.npm__content');
-        const npmTabs = document.querySelectorAll('.npm__tabs');
-        const npxSelects = document.querySelectorAll('.npx-select');
-        const npxSelectResizer = document.querySelector('.npx-select-resizer');
+        const npmContent = document.querySelectorAll(".npm__content");
+        const npmTabs = document.querySelectorAll(".npm__tabs");
+        const npxSelects = document.querySelectorAll(".npx-select");
+        const npxSelectResizer = document.querySelector(".npx-select-resizer");
 
         npmContent.forEach((content) => {
           Array.from(content.children).forEach((child, index) => {
-            child.classList.toggle('hidden', index !== packageManagerIndex);
+            child.classList.toggle("hidden", index !== packageManagerIndex);
           });
         });
 
         npmTabs.forEach((tab) => {
           Array.from(tab.children).forEach((child, index) => {
-            child.classList.toggle('npm__tab--active', index === packageManagerIndex);
-            child.addEventListener('click', () => {
+            child.classList.toggle(
+              "npm__tab--active",
+              index === packageManagerIndex,
+            );
+            child.addEventListener("click", () => {
               packageManager = packageManagers[index];
-              localStorage.setItem('package-manager', packageManager);
+              localStorage.setItem("package-manager", packageManager);
               updateUI(index);
             });
           });
         });
 
         npxSelects.forEach((element) => {
-          npxSelectResizer.querySelector('.line span').innerText = packageManagers[packageManagerIndex];
+          npxSelectResizer.querySelector(".line span").innerText =
+            packageManagers[packageManagerIndex];
           element.value = packageManagerIndex;
-          setTimeout(() => element.style.width = `${npxSelectResizer.offsetWidth}px`, 1);
-          element.addEventListener('change', (e) => {
+          setTimeout(
+            () => (element.style.width = `${npxSelectResizer.offsetWidth}px`),
+            1,
+          );
+          element.addEventListener("change", (e) => {
             packageManager = packageManagers[Number(e.target.value)];
-            localStorage.setItem('package-manager', packageManager);
+            localStorage.setItem("package-manager", packageManager);
             updateUI(Number(e.target.value));
-          })
+          });
         });
-      }
+      };
 
       const updateCollapsedSections = () => {
-        document.querySelectorAll('.nav-items-collapsable').forEach((section) => {
-          if (Number(section.getAttribute("data-active-inner-item")) && !expandedSections.find((v) => v === section.id)) {
-            expandedSections = [...expandedSections, section.id]
-          }
-          if (expandedSections.find((v) => v === section.id)) {
-            section.classList.add('expanded');
-          } else {
-            section.classList.remove('expanded');
-          }
-        })
+        document
+          .querySelectorAll(".nav-items-collapsable")
+          .forEach((section) => {
+            if (
+              Number(section.getAttribute("data-active-inner-item")) &&
+              !expandedSections.find((v) => v === section.id)
+            ) {
+              expandedSections = [...expandedSections, section.id];
+            }
+            if (expandedSections.find((v) => v === section.id)) {
+              section.classList.add("expanded");
+            } else {
+              section.classList.remove("expanded");
+            }
+          });
 
-        localStorage.setItem('expandedSections', JSON.stringify(expandedSections));
-      }
+        localStorage.setItem(
+          "expandedSections",
+          JSON.stringify(expandedSections),
+        );
+      };
 
       const scrollSidebar = () => {
         const expandedSections = localStorage.getItem("expandedSections")
           ? JSON.parse(localStorage.getItem("expandedSections"))
-      : [];
+          : [];
 
-        document.querySelectorAll(".nav-items-collapsable").forEach((section) => {
-          if (expandedSections.find((v) => v === section.id)) {
-            section.classList.add("expanded");
-          } else {
-            section.classList.remove("expanded");
-          }
-        });
+        document
+          .querySelectorAll(".nav-items-collapsable")
+          .forEach((section) => {
+            if (expandedSections.find((v) => v === section.id)) {
+              section.classList.add("expanded");
+            } else {
+              section.classList.remove("expanded");
+            }
+          });
 
         const leftSidebar = document.querySelector(".aside-scroll");
         const navItems = document.querySelectorAll("[data-nav-index]");
@@ -320,8 +340,7 @@ const { tree, filteredHeadings, title } = await getContentTree({
               if (previousElement.classList.contains("nav-separator")) {
                 return previousElement;
               }
-              previousElement =
-                previousElement.previousElementSibling;
+              previousElement = previousElement.previousElementSibling;
             }
 
             return null;
@@ -351,6 +370,39 @@ const { tree, filteredHeadings, title } = await getContentTree({
       changeNpmTab();
     </script>
     <script>
+      document.addEventListener("astro:page-load", () => {
+        const copyBtn = document.querySelectorAll(
+          "[data-copy-btn]",
+        ) as NodeListOf<HTMLElement>;
+        copyBtn.forEach((n) => {
+          n.addEventListener("click", () => {
+            let timeouts: NodeJS.Timeout[] = [];
+
+            if (timeouts.length) {
+              timeouts.forEach((id) => {
+                clearTimeout(id);
+              });
+            }
+
+            navigator.clipboard.writeText(n.dataset.code!);
+
+            n.classList.add("copied");
+            n.classList.add("hide-svg");
+            timeouts.push(
+              setTimeout(() => {
+                n.classList.remove("copied");
+              }, 1500),
+            );
+            timeouts.push(
+              setTimeout(() => {
+                n.classList.remove("hide-svg");
+              }, 2000),
+            );
+          });
+        });
+      });
+    </script>
+    <script>
       class RemElement extends HTMLElement {
         constructor() {
           super();
@@ -358,99 +410,112 @@ const { tree, filteredHeadings, title } = await getContentTree({
       }
 
       // Регистрация нового элемента
-      customElements.define('rem', RemElement);
-      customElements.define('rem025', RemElement);
-      customElements.define('rem05', RemElement);
+      customElements.define("rem", RemElement);
+      customElements.define("rem025", RemElement);
+      customElements.define("rem05", RemElement);
     </script>
     <script is:inline data-astro-rerun>
-        document.querySelectorAll("h2").forEach((el) => {
-          if (el.innerText === '---') {
-            el.classList.add('hidden-separator')
-          }
-        })
+      document.querySelectorAll("h2").forEach((el) => {
+        if (el.innerText === "---") {
+          el.classList.add("hidden-separator");
+        }
+      });
     </script>
     <script>
       document.addEventListener("astro:after-swap", () => {
-        const npmContent: NodeList = document.querySelectorAll('.npm__content');
-        const npmTabs: NodeList = document.querySelectorAll('.npm__tabs');
-        const npxSelects: NodeList = document.querySelectorAll('.npx-select');
-        const npxSelectResizer = document.querySelector('.npx-select-resizer');
-        const packageManagers: string[] = ['npm', 'yarn', 'pnpm', 'bun'];
-        let packageManager: string = localStorage.getItem('package-manager') || 'npm';
-        let packageManagerIndex: number = packageManagers.indexOf(packageManager);
+        const npmContent: NodeList = document.querySelectorAll(".npm__content");
+        const npmTabs: NodeList = document.querySelectorAll(".npm__tabs");
+        const npxSelects: NodeList = document.querySelectorAll(".npx-select");
+        const npxSelectResizer = document.querySelector(".npx-select-resizer");
+        const packageManagers: string[] = ["npm", "yarn", "pnpm", "bun"];
+        let packageManager: string =
+          localStorage.getItem("package-manager") || "npm";
+        let packageManagerIndex: number =
+          packageManagers.indexOf(packageManager);
 
         const updateUI = (index: number): void => {
           npmContent.forEach((element) => {
-            Array.from((element as HTMLElement).children).forEach((child, i) => {
-              child.classList.toggle('hidden', i !== index);
-            });
+            Array.from((element as HTMLElement).children).forEach(
+              (child, i) => {
+                child.classList.toggle("hidden", i !== index);
+              },
+            );
           });
           npmTabs.forEach((element) => {
-            Array.from((element as HTMLElement).children).forEach((child, i) => {
-              child.classList.toggle('npm__tab--active', i === index);
-            });
+            Array.from((element as HTMLElement).children).forEach(
+              (child, i) => {
+                child.classList.toggle("npm__tab--active", i === index);
+              },
+            );
           });
 
-          npxSelectResizer.querySelector('.line span').innerText = packageManagers[index]
+          npxSelectResizer.querySelector(".line span").innerText =
+            packageManagers[index];
 
           npxSelects.forEach((element) => {
             element.value = index;
-            element.style.width = `${npxSelectResizer.offsetWidth}px`
+            element.style.width = `${npxSelectResizer.offsetWidth}px`;
           });
         };
 
         npmContent.forEach((content) => {
-          Array.from((content as HTMLElement).children).forEach((child, index) => {
-            child.classList.toggle('hidden', index !== packageManagerIndex);
-          });
+          Array.from((content as HTMLElement).children).forEach(
+            (child, index) => {
+              child.classList.toggle("hidden", index !== packageManagerIndex);
+            },
+          );
         });
 
         npmTabs.forEach((tab) => {
           Array.from((tab as HTMLElement).children).forEach((child, index) => {
-            child.classList.toggle('npm__tab--active', index === packageManagerIndex);
-            child.addEventListener('click', () => {
+            child.classList.toggle(
+              "npm__tab--active",
+              index === packageManagerIndex,
+            );
+            child.addEventListener("click", () => {
               packageManager = packageManagers[index];
-              localStorage.setItem('package-manager', packageManager);
+              localStorage.setItem("package-manager", packageManager);
               updateUI(index);
             });
           });
         });
 
         npxSelects.forEach((element) => {
-          npxSelectResizer.querySelector('.line span').innerText = packageManagers[packageManagerIndex];
+          npxSelectResizer.querySelector(".line span").innerText =
+            packageManagers[packageManagerIndex];
           element.value = packageManagerIndex;
-          element.style.width = `${npxSelectResizer.offsetWidth}px`
-          element.addEventListener('change', (e) => {
+          element.style.width = `${npxSelectResizer.offsetWidth}px`;
+          element.addEventListener("change", (e) => {
             packageManager = packageManagers[Number(e.target.value)];
-            localStorage.setItem('package-manager', packageManager);
+            localStorage.setItem("package-manager", packageManager);
             updateUI(Number(e.target.value));
-          })
+          });
         });
-      })
-      </script>
+      });
+    </script>
     <style is:global>
       rem {
-          display: block;
-          height: 1rem;
+        display: block;
+        height: 1rem;
       }
 
       rem025 {
-          display: block;
-          height: 0.25rem;
+        display: block;
+        height: 0.25rem;
       }
 
       rem05 {
-          display: block;
-          height: 0.5rem;
+        display: block;
+        height: 0.5rem;
       }
 
       .hidden-separator {
-          width: 0;
-          height: 0;
-          pointer-events: none;
-          overflow: hidden;
-          margin: 0 !important;
-          padding: 0 !important;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+        overflow: hidden;
+        margin: 0 !important;
+        padding: 0 !important;
       }
     </style>
   </body>
