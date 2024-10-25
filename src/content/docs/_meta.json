@@ -1,5 +1,6 @@
 [
   "meet drizzle",
+  ["components", "Components"],
   ["get-started", "Get started"],
   ["overview", "Why Drizzle?"],
   ["gotchas", "Gotchas"],
