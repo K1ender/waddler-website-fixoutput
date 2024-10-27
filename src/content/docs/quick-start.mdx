@@ -1,0 +1,57 @@
+import Npm from '@mdx/Npm.astro';
+import Callout from '@mdx/Callout.astro';
+import CodeTabs from '@mdx/CodeTabs.astro';
+import YoutubeCards from '@mdx/YoutubeCards.astro';
+import Prerequisites from '@mdx/Prerequisites.astro';
+import Flex from "@mdx/Flex.astro"
+import LinksList from "@mdx/LinksList.astro"
+
+# Quick start with Waddler
+<Prerequisites>
+- DuckDB database and NodeJS driver - [read here](https://duckdb.org/docs/api/nodejs/overview)
+</Prerequisites>
+<br/>
+
+**Step 1** - install dependencies:
+<Npm>
+waddler duckdb
+</Npm>
+
+
+**Step 2** - initialise Waddler instance:
+```ts
+import { waddler } from "waddler";
+
+const sql = waddler({ dbUrl: "local.db", min: 1, max: 1 })
+```
+
+**Step 3** - run your first query:
+```ts
+const result = await sql`select 1`;
+```
+
+<br/>
+
+#### What's next?
+<Flex>
+  <LinksList 
+    title='SQL template'
+    links={[
+        ["sql``", "/docs/sql-template"], 
+        ["sql.identifier", "/docs/sql-identifier"], 
+        ["sql.values", "/docs/sql-values"],
+        ["sql.raw", "/docs/sql-raw"],
+        ["sql.default", "/docs/sql-default"],
+      ]}
+  />
+  <LinksList 
+    title='Goodies'
+    links={[
+        ["Types", "/docs/types"], 
+        ["toSQL", "/docs/tosql"], 
+        ["stream", "/docs/stream"],
+        ["chunked", "/docs/chunked"],
+        ["pooling", "/docs/pooling"],
+      ]}
+  />
+</Flex>
