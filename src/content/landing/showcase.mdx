@@ -1,197 +1,136 @@
 import BigCodeTabs from "@mdx/BigCodeTabs.astro";
+import Section from "@mdx/Section.astro";
 
 <BigCodeTabs
   items={[
-    "Declare schema",
-    "Shopify clients",
-    "Fetch client",
-    "Runtime migrations",
-    "Schema pull",
-    "Schema push",
-    "OAuth",
-    "Queries filter",
+    "SQL template",
+    "Pooling for MotherDuck",
+    "sql.identifier",
+    "sql.values",
+    "sql.raw",
+    "Stream",
+    "Chunked",
   ]}
 >
-{/* Declare schema */}
+{/* SQL template */}
+<Section>
 ```ts
-import { metaobject } from '@drizzle-team/tento';
+import { waddler } from 'waddler';
 
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+const sql = waddler({ dbUrl: ":memory:" })
+
+await sql`select * from "users" where "id" = ${10}`;
 ```
-{/* Shopify clients */}
+```sql
+select * from "users" where "id" = $1;
+-- 10 will be passed as a param [10]
+```
+</Section>
+
+{/* Pooling */}
+<Section>
 ```ts
-~ npx tento push
+import { waddler } from "waddler";
 
-- Updated metaobject definition "ORM"
-✅ All changes applied
+const sql = waddler({ dbUrl: "md:?…", min: 1, max: 8 }); // MotherDuck connection URL
+
+// fetches concurrently
+const res = await Promise.all([
+	sql`select 1`,
+	sql`select 2`,
+]);
 ```
-{/* Fetch client */}
+</Section>
+
+{/* SQL identifier */}
+<Section>
 ```ts
-import { metaobject } from '@drizzle-team/tento';
-
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+await sql`select * from ${sql.identifier("users")}`;
+await sql`select ${sql.identifier("id")} from ${sql.identifier("users")}`;
+await sql`select ${sql.identifier(["id", "name", "email"])} from ${sql.identifier("users")}`;
 ```
-{/* Schema pull */}
+```sql
+select * from "users";
+select "id" from "users";
+select "id", "name", "email" from "users";
+```
+</Section>
+
+{/* SQL values */}
+<Section>
 ```ts
-import { metaobject } from '@drizzle-team/tento';
+await sql`insert into "users" ("name") values ${sql.values([["Dan"]])}`;
 
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+const values = sql.values([["Dan", "dan@acme.com", 25]]);
+await sql`insert into "users" ("name", "email", "age") values ${values}`;
 ```
-{/* Schema push */}
+```sql
+insert into "users" ("name") values ('Dan');
+insert into "users" ("name") values ('Dan', 'dan@acme.com', 25);
+```
+</Section>
+
+{/* sql.raw */}
+<Section>
 ```ts
-import { metaobject } from '@drizzle-team/tento';
+const listUsers = async (filter: string | undefined) => {
+  const whereClause = filter ? sql.raw(` where ${filter}`) : sql.raw("");
+  return sql`select * from "users"${whereClause}`;
+}
 
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+await listUsers(`"id" = 10`);
+await listUsers(`"name" = 'Dan'`);
+await listUsers();
 ```
-{/* Runtime migrations */}
+```sql
+select * from "users" where "id" = 10;
+select * from "users" where "name" = 'Dan';
+select * from "users";
+```
+</Section>
+
+{/* Stream */}
+<Section>
 ```ts
-import { metaobject } from '@drizzle-team/tento';
+const result = sql`select * from users`.stream();
 
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+for await (const row of result) {
+  console.log(row);
+}
 ```
-{/* OAuth */}
+```shell
+{
+  id: 1,
+	name: "Alex",
+}
+{
+  id: 2,
+	name: "Oleksii",
+}
+```
+</Section>
+
+{/* Chunked */}
+<Section>
 ```ts
-import { metaobject } from '@drizzle-team/tento';
+const result = sql`select * from users`.chunked(2);
 
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+for await (const chunk of result) {
+  console.log(chunk);
+}
 ```
-{/* Queries filter */}
-```ts
-import { metaobject } from '@drizzle-team/tento';
-
-export const designers = metaobject({
-  name: 'Designer',
-  type: 'designer',
-  fieldDefinitions: (f) => ({
-    fullName: f.singleLineTextField({
-      name: 'Full Name',
-      required: true,
-      validations: (v) => [v.min(5), v.max(100)],
-    }),
-    description: f.singleLineTextField({
-      name: 'Description',
-      required: true,
-      validations: (v) => [v.min(5), v.max(300)],
-    }),
-    link: f.url(({
-      name: 'Link',
-      validations: (v) => [v.allowedDomains(["github.com"])],
-    }),
-  }),
-});
+```shell
+[
+	{
+  	id: 1,
+		name: "Alex",
+	},
+	{
+	  id: 2,
+		name: "Oleksii",
+	}
+]
+…
 ```
+</Section>
 </BigCodeTabs>
