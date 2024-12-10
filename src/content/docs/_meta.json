@@ -11,6 +11,7 @@
   ["sql-values", "`sql.values`"],
   ["sql-raw", "`sql.raw`"],
   ["sql-default", "`sql.default`"],
+  ["sql-append", "`sql.append`"],
   "---",
   ["tosql", "`toSQL`"],
   ["stream", "`stream`"],
