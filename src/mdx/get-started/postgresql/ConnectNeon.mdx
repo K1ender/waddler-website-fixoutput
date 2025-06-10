@@ -1,0 +1,20 @@
+import Callout from '@mdx/Callout.astro';
+import CodeTabs from "@mdx/CodeTabs.astro";
+import Section from "@mdx/Section.astro";
+
+```typescript
+import { waddler } from 'waddler/neon-http';
+
+const sql = waddler(process.env.DATABASE_URL);
+```
+
+If you need a synchronous connection, you can use our additional connection API, 
+where you specify a driver connection and pass it to the Waddler instance.
+
+```typescript
+import { neon } from '@neondatabase/serverless';
+import { waddler } from 'waddler/neon-http';
+
+const client = neon(process.env.DATABASE_URL!);
+const sql = waddler({ client });
+```

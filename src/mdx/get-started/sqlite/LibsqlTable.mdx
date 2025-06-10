@@ -1,0 +1,7 @@
+|                          |                                                                                                                                           |
+| :----------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| `@libsql/client`         | defaults to `node` import, automatically changes to `web` if `target` or `platofrm` is set for bundler, e.g. `esbuild --platform=browser` |
+| `@libsql/client/node`    | `node` compatible module, supports `:memory:`, `file` and `http` conneciton protocols                                     |
+| `@libsql/client/http`    | module for `http` and `https` connection protocols                                                                                        |
+| `@libsql/client/sqlite3` | module for `:memory:` and `file` conneciton protocols                                                                                     |                                                                                               |
+{/* TODO revise should  `@libsql/client/node` line include `wss` and `turso`? (deleted them for now) */}

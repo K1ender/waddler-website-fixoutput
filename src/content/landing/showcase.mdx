@@ -16,7 +16,7 @@ import Section from "@mdx/Section.astro";
 {/* SQL template */}
 <Section>
 ```ts
-import { waddler } from 'waddler';
+import { waddler } from 'waddler/duckdb-neo';
 
 const sql = waddler({ dbUrl: ":memory:" })
 
@@ -31,7 +31,7 @@ select * from "users" where "id" = $1;
 {/* Pooling */}
 <Section>
 ```ts
-import { waddler } from "waddler";
+import { waddler } from "waddler/duckdb-neo";
 
 const sql = waddler({ dbUrl: "md:?…", min: 1, max: 8 }); // MotherDuck connection URL
 

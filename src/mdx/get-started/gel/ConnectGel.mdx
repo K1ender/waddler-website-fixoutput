@@ -1,0 +1,20 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+
+<CodeTabs items={["gel with config", "your gel driver"]}>
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/gel';
+
+// You can specify any property from the gel connection options
+const sql = waddler({ connection: { dsn: process.env.DATABASE_URL!, tlsSecurity: 'insecure' } });
+```
+```typescript copy
+import 'dotenv/config';
+import { createClient } from 'gel';
+import { waddler } from 'waddler/gel';
+
+const client = createClient({ dsn: process.env.DATABASE_URL!, tlsSecurity: 'insecure' });
+const sql = waddler({ client });
+```
+</CodeTabs>

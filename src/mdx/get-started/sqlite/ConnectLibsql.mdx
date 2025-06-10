@@ -1,0 +1,30 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+Create a `index.ts` file in the `src` directory and initialize the connection:
+
+<CodeTabs items={["libsql", "libsql with config"]}>
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/libsql';
+
+const sql = waddler(process.env.DATABASE_URL!);
+```
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/libsql';
+
+// You can specify any property from the libsql connection options
+const sql = waddler({ connection: { url: process.env.DATABASE_URL! }});
+```
+</CodeTabs>
+
+If you need to provide your existing driver:
+
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/libsql';
+import { createClient } from '@libsql/client';
+
+const client = createClient({ url: process.env.DATABASE_URL! });
+const sql = waddler({ client });
+```

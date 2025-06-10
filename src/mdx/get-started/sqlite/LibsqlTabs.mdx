@@ -1,0 +1,28 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+<CodeTabs items={["default", "node", "http"]}>
+```typescript copy
+import { waddler } from 'waddler/libsql';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/node';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/http';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+</CodeTabs>

@@ -1,0 +1,34 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+Create a `index.ts` file in the `src` directory and initialize the connection:
+
+<CodeTabs items={["bun:sqlite", "bun:sqlite with config"]}>
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/bun-sqlite';
+
+const sql = waddler(process.env.DB_FILE_NAME!);
+// You can also provide waddler with no value, an empty string, or ":memory:" to use an in-memory database.
+// const sql = waddler();
+```
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/bun-sqlite';
+
+// You can specify any property from the bun:sql connection options
+const sql = waddler({ connection: { source: process.env.DB_FILE_NAME! }});
+```
+</CodeTabs>
+
+If you need to provide your existing driver:
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/bun-sqlite';
+import { Database } from 'bun:sqlite';
+
+const client = new Database(process.env.DB_FILE_NAME!);
+// You can also provide new Database constructor with no value, an empty string, or ":memory:" to use an in-memory database.
+// const client = new Database();
+
+const sql = waddler({ client });
+```

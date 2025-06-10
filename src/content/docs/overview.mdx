@@ -11,10 +11,10 @@ Waddler - is a thin SQL client on top of official DuckDB NodeJS driver with mode
 
 
 <Npm>
-waddler duckdb
+waddler @duckdb/node-api
 </Npm>
 ```ts
-import { waddler } from "waddler";
+import { waddler } from "waddler/duckdb-neo";
 
 const sql = waddler({ dbUrl: ":memory:" });
 
@@ -25,7 +25,7 @@ Waddler has a baked in [database pooling](/docs/pooling) which unlocks full pote
 It does create multiple database instances under the hood and lets you concurrently fetch data from the remote MotherDuck database.
 
 ```ts
-import { waddler } from "waddler";
+import { waddler } from "waddler/duckdb-neo";
 
 const sql = waddler({ dbUrl: "md:?…", min: 1, max: 8 }); // MotherDuck connection URL
 

@@ -1,0 +1,17 @@
+Create a `index.ts` file in the `src/db` directory and initialize the connection:
+
+```typescript copy
+import { waddler } from 'waddler/pglite';
+
+const sql = waddler();
+```
+
+If you need to provide your existing driver:
+
+```typescript copy
+import { PGlite } from '@electric-sql/pglite';
+import { waddler } from 'waddler/pglite';
+
+const client = new PGlite(process.env.DATABASE_URL!);
+const sql = waddler({ client });
+```

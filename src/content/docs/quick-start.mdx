@@ -8,19 +8,19 @@ import LinksList from "@mdx/LinksList.astro"
 
 # Quick start with Waddler
 <Prerequisites>
-- DuckDB database and NodeJS driver - [read here](https://duckdb.org/docs/api/nodejs/overview)
+- DuckDB database and NodeJS driver - [read here](https://duckdb.org/docs/stable/clients/node_neo/overview)
 </Prerequisites>
 <br/>
 
 **Step 1** - install dependencies:
 <Npm>
-waddler duckdb
+waddler @duckdb/node-api
 </Npm>
 
 
 **Step 2** - initialise Waddler instance:
 ```ts
-import { waddler } from "waddler";
+import { waddler } from "waddler/duckdb-neo";
 
 const sql = waddler({ dbUrl: "local.db", min: 1, max: 1 })
 ```
