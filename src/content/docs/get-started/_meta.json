@@ -1,4 +1,5 @@
 [
+  ["duckdb-neo-new", "Duckdb"],
   ["postgresql-new", "PostgreSQL"],
   ["gel-new", "Gel"],
   ["singlestore-new", "SingleStore"],

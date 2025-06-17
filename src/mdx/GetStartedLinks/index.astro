@@ -76,15 +76,15 @@ const svgs = import.meta.glob<Record<string, any>>("/public/svg/*.svg", {
           });
         });
         break;
-      case "existing":
-        document.getElementById("new").classList.remove("selected");
-        document.getElementById("existing").classList.add("selected");
-        getStartedItems.forEach((group) => {
-          group.items.forEach((link) => {
-            document.getElementById(link.name).href = link.path.existing;
-          });
-        });
-        break;
+      // case "existing":
+      //   document.getElementById("new").classList.remove("selected");
+      //   document.getElementById("existing").classList.add("selected");
+      //   getStartedItems.forEach((group) => {
+      //     group.items.forEach((link) => {
+      //       document.getElementById(link.name).href = link.path.existing;
+      //     });
+      //   });
+      //   break;
     }
   };
 
@@ -92,9 +92,9 @@ const svgs = import.meta.glob<Record<string, any>>("/public/svg/*.svg", {
     .getElementById("new")
     ?.addEventListener("click", () => toggleLinks("new"));
 
-  document
-    .getElementById("existing")
-    ?.addEventListener("click", () => toggleLinks("existing"));
+  // document
+  //   .getElementById("existing")
+  //   ?.addEventListener("click", () => toggleLinks("existing"));
 </script>
 
 <style>

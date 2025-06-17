@@ -18,7 +18,10 @@ async function main() {
       'john@example.com',
     ];
 
-    await sql`insert into ${sql.identifier('users')}(${sql.identifier(['name', 'age', 'email'])}) values ${sql.values([user])};`;
+    await sql`
+      insert into ${sql.identifier('users')}(${sql.identifier(['name', 'age', 'email'])}) 
+      values ${sql.values([user])};
+    `;
     //   query: 'insert into "users"("name", "age", "email") values ($1, $2, $3);',
     //   params: [ 'John', 30, 'john@example.com' ]
     console.log('New user created!')

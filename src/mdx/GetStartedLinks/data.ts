@@ -21,6 +21,36 @@ type GetStartedItems = {
 
 export const getStartedItems: GetStartedItems = [
   {
+    title: "Duckdb",
+    items: [
+      {
+        name: "Duckdb-neo",
+        path: {
+          existing: "/docs/get-started/duckdb-neo-existing",
+          new: "/docs/get-started/duckdb-neo-new",
+        },
+        icon: {
+          light: {
+            path: "/public/svg/duckdb.svg",
+            style: {
+              style: "border-radius: 5px",
+              width: 34,
+              height: 34,
+            },
+          },
+          dark: {
+            path: "/public/svg/duckdb.svg",
+            style: {
+              style: "border-radius: 5px",
+              width: 34,
+              height: 34,
+            },
+          },
+        },
+      },
+    ],
+  },
+  {
     title: "PostgreSQL",
     items: [
       {

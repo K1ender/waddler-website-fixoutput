@@ -11,7 +11,6 @@ import CodeTabs from "@mdx/CodeTabs.astro";
 import FileStructure from '@mdx/get-started/FileStructure.mdx';
 import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
 import ConnectGel from '@mdx/get-started/gel/ConnectGel.mdx'
-import CreateTable from '@mdx/get-started/gel/CreateTable.mdx'
 import RunFile from '@mdx/get-started/RunFile.mdx';
 import QueryDatabase from '@mdx/get-started/gel/QueryGel.mdx';
 import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
@@ -27,26 +26,21 @@ import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
 
 Waddler has native support for Gel connections with the `gel` client.
 
-{/* In the `src` directory, we have table definition in `index.ts`. In `drizzle` folder there are generated Gel to Drizzle schema */}
+This is the basic file structure of the project.
 
-<FileStructure />
-
-{/* TODO: do I need steps: Install and init **Gel** project, #### Step 2 - Define basic Gel schema, #### Step 3 - Push Gel schema to the database */}
-{/* #### Step 1 - Install and init **Gel** project
-
-<Callout>
-Linux or macOS
-```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.edgedb.com | sh
+```plaintext
+📦 <project root>
+ ├ 📂 src
+ │ └ 📜 index.ts
+ ├ 📜 package.json
+ └ 📜 tsconfig.json
 ```
 
-For more options, check [gel docs](https://docs.geldata.com/reference/cli)
-</Callout>
+#### Step 1 - Install and init **Gel** project
 
-Once installed:
-```bash
-gel project init   
-```
+<Npx>
+gel project init
+</Npx>
 
 #### Step 2 - Define basic Gel schema
 
@@ -54,13 +48,19 @@ In `dbschema/default.esdl` file add a basic Gel schema
 
 ```esdl
 module default {
-    TYPE test {
+    type users {
         name: str;
         required email: str;
         age: int16;
     }
 }
 ```
+
+There's no need to manually declare a primary key on your object types.
+
+All object types automatically contain a property id of type UUID that's required, globally unique, readonly, and has an index on it. 
+
+The id is assigned upon creation and cannot be changed.
 
 #### Step 3 - Push Gel schema to the database
 
@@ -85,35 +85,30 @@ Now you should have this file structure
  │ └ 📜 scoping.esdl
  ├ 📂 src
  │ └ 📜 index.ts
- ├ 📜 drizzle.config.ts
  ├ 📜 edgedb.toml
  ├ 📜 package.json
  └ 📜 tsconfig.json
 ```
-</Callout> */}
+</Callout>
 
-#### Step 1 - Install **gel** package
+#### Step 4 - Install required packages
 <Npm>
   waddler gel
   -D tsx
 </Npm>
 
-#### Step 2 - Setup connection variables
+#### Step 5 - Setup connection variables
 
 <SetupEnv env_variable='DATABASE_URL' />
 
-#### Step 3 - Connect Waddler to the database
+#### Step 6 - Connect Waddler to the database
 
 <ConnectGel />
 
-#### Step 4 - Create a table
-
-<CreateTable />
-
-#### Step 5 - Query the database
+#### Step 7 - Query the database
 
 <QueryDatabase/>
 
-#### Step 6 - Run index.ts file
+#### Step 8 - Run index.ts file
 
 <RunFile/>

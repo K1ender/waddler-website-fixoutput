@@ -1,0 +1,10 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+
+<CodeTabs items={["duckdb-neo"]}>
+```typescript copy
+import { waddler } from 'waddler/duckdb-neo';
+
+sql = waddler({ url: ':memory:', max: 10, accessMode: 'read_write' });
+```
+</CodeTabs>

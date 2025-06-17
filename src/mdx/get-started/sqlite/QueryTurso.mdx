@@ -23,7 +23,7 @@ async function main() {
 
   await sql`
     insert into ${sql.identifier('users')}(${sql.identifier(['name', 'age', 'email'])}) 
-      values ${sql.values([user])};
+    values ${sql.values([user])};
   `.run();
   console.log('New user created!')
 
