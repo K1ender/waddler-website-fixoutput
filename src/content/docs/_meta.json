@@ -1,7 +1,6 @@
 [
   "meet waddler",
   ["overview", "Overview"],
-  ["quick-start", "Quick Start"],
   ["get-started", "Get started"],
   "connect",
   ["connect-postgresql", "PostgreSQL"],
