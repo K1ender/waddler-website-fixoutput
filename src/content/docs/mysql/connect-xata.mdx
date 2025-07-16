@@ -1,0 +1,63 @@
+import Tab from '@mdx/Tab.astro';
+import Tabs from '@mdx/Tabs.astro';
+import Npm from "@mdx/Npm.astro";
+import Callout from '@mdx/Callout.astro';
+import Steps from '@mdx/Steps.astro';
+import AnchorCards from '@mdx/AnchorCards.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+# Waddler \<\> Xata
+
+<Prerequisites>
+- Database [connection basics](/docs/connect-overview) with waddler
+- Xata database - [website](https://xata.io/docs)
+- Xata driver - [docs](https://xata.io/docs/sdk/typescript/overview) & [GitHub](https://github.com/xataio/client-ts)
+- Waddler PostgreSQL drivers - [docs](/docs/connect-postgresql)
+</Prerequisites>
+
+According their **[official website](https://xata.io)**, Xata is a Postgres data platform with a focus on reliability, scalability, and developer experience. The Xata Postgres service is currently in beta, please see the [Xata docs](https://xata.io/docs/postgres) on how to enable it in your account.
+
+Waddler natively supports both the `xata` driver with `waddler/xata` package and the **[postgres](/docs/connect-postgresql#postgresjs)** or **[pg](/docs/connect-postgresql#node-postgres)** drivers for accessing a Xata Postgres database.
+
+#### Step 1 - Install packages
+
+<Npm>
+waddler @xata.io/client
+</Npm>
+
+You can use Waddler with Xata with a HTTP client or a TCP client. The HTTP client doesn't create a persistent connection to the Xata server, while the TCP client does and can be used for better performance with a higher number of requests. The HTTP client is usually recommended from serverless environments like Cloudflare Workers or Vercel Edge Functions. The TCP client is typically used from long-running servers like Express.js or Fastify.
+
+The following example use the Xata generated client, which you obtain by running the [xata init](https://xata.io/docs/getting-started/installation) CLI command.
+
+<CodeTabs items={['HTTP', 'TCP', 'TCP (pool)']}>
+```typescript copy"
+import { waddler } from 'waddler/xata-http';
+import { getXataClient } from './xata'; // Generated client
+
+const xata = getXataClient();
+const sql = waddler({ client: xata });
+
+const result = await sql`select 1;`;
+```
+```typescript copy"
+import { waddler } from 'waddler/node-postgres';
+import { getXataClient } from './xata'; // Generated client
+import { Client } from 'pg';
+
+const xata = getXataClient();
+const client = new Client({ connectionString: xata.sql.connectionString });
+const sql = waddler({ client });
+```
+```typescript copy"
+import { waddler } from 'waddler/node-postgres';
+import { getXataClient } from './xata'; // Generated client
+import { Pool } from 'pg';
+
+const xata = getXataClient();
+const pool = new Pool({ connectionString: xata.sql.connectionString, max: 10 });
+const sql = waddler({ client: pool });
+```
+</CodeTabs>
+
+If you prefer to not use the generated Xata client, it is also possible to use Xata with the **[postgres](/docs/connect-postgresql#postgresjs)** or **[pg](/docs/connect-postgresql#node-postgres)** drivers, in this case you can copy the connection string from the Settings page of your Xata database. For more information, please check our [PostgreSQL connections section](/docs/connect-postgresql)

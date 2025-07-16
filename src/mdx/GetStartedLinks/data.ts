@@ -26,24 +26,22 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Duckdb-neo",
         path: {
-          existing: "/docs/get-started/duckdb-neo-existing",
-          new: "/docs/get-started/duckdb-neo-new",
+          existing: "/docs/duckdb/get-started/duckdb-neo-existing",
+          new: "/docs/duckdb/get-started/duckdb-neo-new",
         },
         icon: {
           light: {
             path: "/public/svg/duckdb.svg",
             style: {
-              style: "border-radius: 5px",
-              width: 34,
-              height: 34,
+              width: 22,
+              height: 22,
             },
           },
           dark: {
-            path: "/public/svg/duckdb.svg",
+            path: "/public/svg/duckdb-dark.svg",
             style: {
-              style: "border-radius: 5px",
-              width: 34,
-              height: 34,
+              width: 22,
+              height: 22,
             },
           },
         },
@@ -226,8 +224,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Gel",
         path: {
-          existing: "/docs/get-started/gel-existing",
-          new: "/docs/get-started/gel-new",
+          existing: "/docs/gel/get-started/gel-existing",
+          new: "/docs/gel/get-started/gel-new",
         },
         icon: {
           light: {
@@ -256,8 +254,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "MySQL",
         path: {
-          existing: "/docs/get-started/mysql-existing",
-          new: "/docs/get-started/mysql-new",
+          existing: "/docs/mysql/get-started/mysql-existing",
+          new: "/docs/mysql/get-started/mysql-new",
         },
         icon: {
           light: {
@@ -279,8 +277,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "PlanetScale",
         path: {
-          existing: "/docs/get-started/planetscale-existing",
-          new: "/docs/get-started/planetscale-new",
+          existing: "/docs/mysql/get-started/planetscale-existing",
+          new: "/docs/mysql/get-started/planetscale-new",
         },
         icon: {
           light: {
@@ -301,8 +299,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "TiDB",
         path: {
-          existing: "/docs/get-started/tidb-existing",
-          new: "/docs/get-started/tidb-new",
+          existing: "/docs/mysql/get-started/tidb-existing",
+          new: "/docs/mysql/get-started/tidb-new",
         },
         icon: {
           light: {
@@ -322,8 +320,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "SingleStore",
         path: {
-          existing: "/docs/get-started/singlestore-existing",
-          new: "/docs/get-started/singlestore-new",
+          existing: "/docs/mysql/get-started/singlestore-existing",
+          new: "/docs/mysql/get-started/singlestore-new",
         },
         icon: {
           light: {
@@ -350,8 +348,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "SQLite",
         path: {
-          existing: "/docs/get-started/sqlite-existing",
-          new: "/docs/get-started/sqlite-new",
+          existing: "/docs/sqlite/get-started/sqlite-existing",
+          new: "/docs/sqlite/get-started/sqlite-new",
         },
         icon: {
           light: {
@@ -371,8 +369,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Turso",
         path: {
-          existing: "/docs/get-started/turso-existing",
-          new: "/docs/get-started/turso-new",
+          existing: "/docs/sqlite/get-started/turso-existing",
+          new: "/docs/sqlite/get-started/turso-new",
         },
         icon: {
           light: {
@@ -392,8 +390,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Cloudflare D1",
         path: {
-          existing: "/docs/get-started/d1-existing",
-          new: "/docs/get-started/d1-new",
+          existing: "/docs/sqlite/get-started/d1-existing",
+          new: "/docs/sqlite/get-started/d1-new",
         },
         icon: {
           light: {
@@ -413,8 +411,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Bun SQLite",
         path: {
-          existing: "/docs/get-started/bun-sqlite-existing",
-          new: "/docs/get-started/bun-sqlite-new",
+          existing: "/docs/sqlite/get-started/bun-sqlite-existing",
+          new: "/docs/sqlite/get-started/bun-sqlite-new",
         },
         icon: {
           light: {
@@ -434,8 +432,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Cloudflare Durable Objects",
         path: {
-          existing: "/docs/get-started/do-existing",
-          new: "/docs/get-started/do-new",
+          existing: "/docs/sqlite/get-started/do-existing",
+          new: "/docs/sqlite/get-started/do-new",
         },
         icon: {
           light: {
@@ -460,8 +458,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "Expo SQLite",
         path: {
-          existing: "/docs/get-started/expo-existing",
-          new: "/docs/get-started/expo-new",
+          existing: "/docs/sqlite/get-started/expo-existing",
+          new: "/docs/sqlite/get-started/expo-new",
         },
         icon: {
           light: {
@@ -481,8 +479,8 @@ export const getStartedItems: GetStartedItems = [
       {
         name: "OP SQLite",
         path: {
-          existing: "/docs/get-started/op-sqlite-existing",
-          new: "/docs/get-started/op-sqlite-new",
+          existing: "/docs/sqlite/get-started/op-sqlite-existing",
+          new: "/docs/sqlite/get-started/op-sqlite-new",
         },
         icon: {
           light: {

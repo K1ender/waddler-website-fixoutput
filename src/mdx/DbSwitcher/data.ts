@@ -1,0 +1,122 @@
+type DbSwitcherItem = {
+  id: string | null;
+  name: string;
+  path: string;
+  icon: {
+    light: {
+      path: string;
+      style?: Record<string, any>;
+    };
+    dark: {
+      path: string;
+      style?: Record<string, any>;
+    };
+  };
+};
+
+export const dbSwitcherItems: DbSwitcherItem[] = [
+  {
+    id: "duckdb",
+    name: "Duckdb",
+    path: "/docs/duckdb/overview",
+    icon: {
+      light: {
+        path: "/public/svg/duckdb.svg",
+        style: {
+          width: 22,
+          height: 22,
+        },
+      },
+      dark: {
+        path: "/public/svg/duckdb-dark.svg",
+        style: {
+          width: 22,
+          height: 22,
+        },
+      },
+    },
+  },
+  {
+    id: "pg",
+    name: "PostgreSQL",
+    path: "/docs/overview",
+    icon: {
+      light: {
+        path: "/public/svg/postgresql.svg",
+        style: {
+          width: 20,
+        },
+      },
+      dark: {
+        path: "/public/svg/postgresql.svg",
+        style: {
+          width: 20,
+          fill: "#f0f0f0",
+        },
+      },
+    },
+  },
+  {
+    id: "gel",
+    name: "Gel",
+    path: "/docs/gel/overview",
+    icon: {
+      light: {
+        path: "/public/svg/gel_light.svg",
+        style: {
+          style: "border-radius: 5px",
+          width: 34,
+          height: 34,
+        },
+      },
+      dark: {
+        path: "/public/svg/gel_dark.svg",
+        style: {
+          style: "border-radius: 5px",
+          width: 34,
+          height: 34,
+        },
+      },
+    },
+  },
+  {
+    id: "mysql",
+    name: "MySQL",
+    path: "/docs/mysql/overview",
+    icon: {
+      light: {
+        path: "/public/svg/mysql.svg",
+        style: {
+          width: 20,
+          fill: "#00546B",
+        },
+      },
+      dark: {
+        path: "/public/svg/mysql.svg",
+        style: {
+          width: 20,
+          fill: "#F0F0F0",
+        },
+      },
+    },
+  },
+  {
+    id: "sqlite",
+    name: "SQLite",
+    path: "/docs/sqlite/overview",
+    icon: {
+      light: {
+        path: "/public/svg/sqlite.svg",
+        style: {
+          width: 20,
+        },
+      },
+      dark: {
+        path: "/public/svg/sqlite.svg",
+        style: {
+          width: 20,
+        },
+      },
+    },
+  },
+];

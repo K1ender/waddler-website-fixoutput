@@ -1,0 +1,82 @@
+import Npm from "@mdx/Npm.astro";
+import Callout from '@mdx/Callout.astro';
+import AnchorCards from '@mdx/AnchorCards.astro';
+import Steps from '@mdx/Steps.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import LibsqlTable from "@mdx/get-started/sqlite/LibsqlTable.mdx";
+import LibsqlTabs from "@mdx/get-started/sqlite/LibsqlTabs.mdx";
+
+# Waddler \<\> Turso
+
+<Prerequisites>
+- Database [connection basics](/docs/connect-overview) with Waddler
+- Turso Database - [website](https://docs.turso.tech/introduction)
+- LibSQL driver - [website](https://docs.turso.tech/sdk/ts/reference) & [GitHub](https://github.com/tursodatabase/libsql-client-ts)
+</Prerequisites>
+
+According to the **[official website](https://turso.tech/drizzle)**, 
+Turso is a **[libSQL](https://github.com/libsql/libsql)** powered edge SQLite database as a service.
+  
+Waddler natively supports libSQL driver, 
+we embrace SQL dialects and dialect specific drivers and syntax and mirror 
+SQLite-like `all`, `run` query methods syntax. 
+
+#### Step 1 - Install packages
+<Npm>
+waddler @libsql/client
+</Npm>
+
+#### Step 2 - Initialize the driver
+Waddler has native support for all `@libsql/client` driver variations:
+
+<LibsqlTable />
+
+<br />
+
+<LibsqlTabs />
+
+
+If you need to provide your existing driver:
+
+<CodeTabs items={["default", "web"]}>
+```typescript copy
+import { waddler } from 'waddler/libsql';
+import { createClient } from '@libsql/client';
+
+const client = createClient({ 
+  url: process.env.DATABASE_URL,
+  authToken: process.env.DATABASE_AUTH_TOKEN
+});
+
+const sql = waddler({ client });
+
+const result = await sql`select 1;`.all();
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/web';
+import { createClient } from '@libsql/client/web';
+
+const client = createClient({ 
+  url: process.env.DATABASE_URL,
+  authToken: process.env.DATABASE_AUTH_TOKEN
+});
+
+const sql = waddler({ client });
+
+const result = await sql`select 1;`.all();
+```
+</CodeTabs>
+
+#### Step 3 - make a query
+
+```ts
+import { waddler } from 'waddler/libsql';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+
+const result = await sql`select 1;`.all();
+```

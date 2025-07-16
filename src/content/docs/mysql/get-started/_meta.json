@@ -1,0 +1,6 @@
+[
+  ["singlestore-new", "SingleStore"],
+  ["mysql-new", "MySQL"],
+  ["planetscale-new", "MySQL"],
+  ["tidb-new", "MySQL"]
+]

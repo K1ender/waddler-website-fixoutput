@@ -1,0 +1,9 @@
+[
+  ["sqlite-new", "SQLite"],
+  ["turso-new", "SQLite"],
+  ["d1-new", "SQLite"],
+  ["do-new", "SQLite"],
+  ["bun-sqlite-new", "SQLite"],
+  ["expo-new", "Native SQLite"],
+  ["op-sqlite-new", "Native SQLite"]
+]
