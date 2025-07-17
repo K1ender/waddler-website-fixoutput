@@ -23,15 +23,15 @@ export const dbSwitcherItems: DbSwitcherItem[] = [
       light: {
         path: "/public/svg/duckdb.svg",
         style: {
-          width: 22,
-          height: 22,
+          width: 18,
+          height: 18,
         },
       },
       dark: {
         path: "/public/svg/duckdb-dark.svg",
         style: {
-          width: 22,
-          height: 22,
+          width: 18,
+          height: 18,
         },
       },
     },
@@ -44,13 +44,13 @@ export const dbSwitcherItems: DbSwitcherItem[] = [
       light: {
         path: "/public/svg/postgresql.svg",
         style: {
-          width: 20,
+          width: 18,
         },
       },
       dark: {
         path: "/public/svg/postgresql.svg",
         style: {
-          width: 20,
+          width: 18,
           fill: "#f0f0f0",
         },
       },
@@ -65,16 +65,16 @@ export const dbSwitcherItems: DbSwitcherItem[] = [
         path: "/public/svg/gel_light.svg",
         style: {
           style: "border-radius: 5px",
-          width: 34,
-          height: 34,
+          width: 32,
+          height: 32,
         },
       },
       dark: {
         path: "/public/svg/gel_dark.svg",
         style: {
           style: "border-radius: 5px",
-          width: 34,
-          height: 34,
+          width: 32,
+          height: 32,
         },
       },
     },
@@ -87,14 +87,14 @@ export const dbSwitcherItems: DbSwitcherItem[] = [
       light: {
         path: "/public/svg/mysql.svg",
         style: {
-          width: 20,
+          width: 18,
           fill: "#00546B",
         },
       },
       dark: {
         path: "/public/svg/mysql.svg",
         style: {
-          width: 20,
+          width: 18,
           fill: "#F0F0F0",
         },
       },
@@ -108,13 +108,13 @@ export const dbSwitcherItems: DbSwitcherItem[] = [
       light: {
         path: "/public/svg/sqlite.svg",
         style: {
-          width: 20,
+          width: 18,
         },
       },
       dark: {
         path: "/public/svg/sqlite.svg",
         style: {
-          width: 20,
+          width: 18,
         },
       },
     },

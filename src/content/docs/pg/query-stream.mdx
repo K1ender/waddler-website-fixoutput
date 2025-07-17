@@ -1,0 +1,33 @@
+import Prerequisites from '@mdx/Prerequisites.astro';
+import Npm from '@mdx/Npm.astro';
+
+# Query Stream Extension
+
+<Prerequisites>
+- Quick start with Waddler - [read here](/docs/get-started/postgresql-new)
+- Waddler SQL template - [read here](/docs/sql-template)
+- Waddler Extensions - [read here](/docs/extensions)
+</Prerequisites>
+
+Some PostgreSQL clients, like `node-postgres`, require separate libraries to 
+enable certain features, such as streaming and chunking.
+To make it work with `waddler`, you need to install the `query-stream` package and then 
+configure Waddler to enable it
+
+<Npm>
+pg-query-stream
+</Npm>
+
+```ts
+import { queryStream } from 'waddler/extensions/pg-query-stream';
+
+const sql = waddler(process.env.DATABASE_URL!, { extensions: [queryStream()] });
+
+const result = sql`select * from users`.stream();
+
+for await (const row of result) {
+  console.log(row);
+}
+```
+
+For more exmaples you can check [stream](/docs/stream) and [chunked](/docs/chunked) pages
