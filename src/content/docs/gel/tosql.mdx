@@ -5,8 +5,8 @@ import YoutubeCards from '@mdx/YoutubeCards.astro';
 
 # Waddler toSQL
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
-- Waddler SQL template - [read here](/docs/sql-template)
+- Quick start with Waddler - [read here](/docs/gel/get-started/gel-new)
+- Waddler SQL template - [read here](/docs/gel/sql-template)
 </Prerequisites>
 <br/>
 
@@ -23,6 +23,6 @@ console.log(sql`select * from users where id = ${10}`.toSQL());
 }
 {
   query: "select * from users where id = $1",
-  params: [ 10 ],
+  params: [10],
 }
 ```
