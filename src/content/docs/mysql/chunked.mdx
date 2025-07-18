@@ -5,10 +5,14 @@ import YoutubeCards from '@mdx/YoutubeCards.astro';
 
 # Waddler chunked
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
-- Waddler SQL template - [read here](/docs/sql-template)
+- Quick start with Waddler - [read here](/docs/mysql/get-started/mysql-new)
+- Waddler SQL template - [read here](/docs/mysql/sql-template)
 </Prerequisites>
 <br/>
+
+<Callout type='info' title='Note'>
+Chunked features is not implemented in `planetscale` and `tidb` drivers
+</Callout>
 
 `.chunked()` lets you stream query result rows in chunks:
 ```ts

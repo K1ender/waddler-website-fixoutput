@@ -6,10 +6,14 @@ import YoutubeCards from '@mdx/YoutubeCards.astro';
 
 # Waddler stream
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
-- Waddler SQL template - [read here](/docs/sql-template)
+- Quick start with Waddler - [read here](/docs/mysql/get-started/mysql-new)
+- Waddler SQL template - [read here](/docs/mysql/sql-template)
 </Prerequisites>
 <br/>
+
+<Callout type='info' title='Note'>
+Stream is not implemented in `planetscale` and `tidb` drivers
+</Callout>
 
 `.stream()` lets you stream query result rows one by one:
 <CodeTabs items={["for await", "generator"]}>

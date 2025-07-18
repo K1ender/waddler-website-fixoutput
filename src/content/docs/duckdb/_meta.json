@@ -9,6 +9,7 @@
   ["sql-identifier", "`sql.identifier`"],
   ["sql-values", "`sql.values`"],
   ["sql-raw", "`sql.raw`"],
+  ["sql-unsafe", "`sql.unsafe`"],
   ["sql-default", "`sql.default`"],
   ["sql-append", "`sql.append`"],
   "---",

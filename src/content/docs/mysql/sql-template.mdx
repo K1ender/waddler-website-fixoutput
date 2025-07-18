@@ -5,14 +5,14 @@ import Prerequisites from '@mdx/Prerequisites.astro';
 
 # SQL template
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
+- Quick start with Waddler - [read here](/docs/mysql/get-started/mysql-new)
 </Prerequisites>
 
 SQL template is the core of Waddler.  
 ```ts
-import { waddler } from "waddler/duckdb-neo";
+import { waddler } from "waddler/mysql2";
 
-const sql = waddler({ dbUrl: ":memory:" });
+const sql = waddler(process.env.DATABASE_URL!);
 
 await sql`select 1`;
 ```
@@ -23,7 +23,7 @@ await sql`select * from users where id = ${10}`;
 // ^ gets parametrised, protects from SQL injections
 ```
 ```sql
-select * from users where id = $1;
+select * from users where id = ?;
 -- 10 will be provided in params [10]
 ```
 
