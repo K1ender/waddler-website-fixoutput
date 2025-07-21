@@ -5,14 +5,14 @@ import Prerequisites from '@mdx/Prerequisites.astro';
 
 # SQL template
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
+- Quick start with Waddler - [read here](/docs/sqlite/get-started/sqlite-new)
 </Prerequisites>
 
 SQL template is the core of Waddler.  
 ```ts
-import { waddler } from "waddler/duckdb-neo";
+import { waddler } from "waddler/libsql";
 
-const sql = waddler({ dbUrl: ":memory:" });
+const sql = waddler(":memory:");
 
 await sql`select 1`;
 ```

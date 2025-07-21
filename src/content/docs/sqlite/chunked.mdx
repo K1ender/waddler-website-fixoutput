@@ -5,10 +5,16 @@ import YoutubeCards from '@mdx/YoutubeCards.astro';
 
 # Waddler chunked
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
-- Waddler SQL template - [read here](/docs/sql-template)
+- Quick start with Waddler - [read here](/docs/sqlite/get-started/sqlite-new)
+- Waddler SQL template - [read here](/docs/sqlite/sql-template)
 </Prerequisites>
 <br/>
+
+<Callout type='info' title='Note'>
+Chunked is not implemented in `d1`, `libsql`, `op-sqlite`
+
+All other drivers have support for a stream feature
+</Callout>
 
 `.chunked()` lets you stream query result rows in chunks:
 ```ts

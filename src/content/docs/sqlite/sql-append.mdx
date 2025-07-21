@@ -6,10 +6,10 @@ import Prerequisites from '@mdx/Prerequisites.astro';
 
 # Waddler SQL append
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/quick-start)
-- Waddler SQL template - [read here](/docs/sql-template)
-- `sql.identifier` - [read here](/docs/sql-identifier)
-- `sql.raw` - [read here](/docs/sql-raw)
+- Quick start with Waddler - [read here](/docs/sqlite/get-started/sqlite-new)
+- Waddler SQL template - [read here](/docs/sqlite/sql-template)
+- `sql.identifier` - [read here](/docs/sqlite/sql-identifier)
+- `sql.raw` - [read here](/docs/sqlite/sql-raw)
 </Prerequisites>
 <br/>
 
@@ -55,8 +55,8 @@ await listItems({ limit: 50, filter: { key: "name", operator: "=", value: "Item 
 await listItems({ limit: 50, offset: 50, filter: { key: "name", operator: "=", value: "Item 1"}});
 ```
 ```sql
-select * from items limit $1; -- [50] params
-select * from items where "name" = $1 limit $2; -- ["Item 1", 50] params
-select * from items where "name" = $1 limit $2 offset $3; -- ["Item 1", 50, 50] params
+select * from items limit ?; -- [50] params
+select * from items where "name" = ? limit ?; -- ["Item 1", 50] params
+select * from items where "name" = ? limit ? offset ?; -- ["Item 1", 50, 50] params
 ```
 </Section>
