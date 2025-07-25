@@ -57,6 +57,26 @@ export const dbSwitcherItems: DbSwitcherItem[] = [
     },
   },
   {
+    id: "clickhouse",
+    name: "ClickHouse",
+    path: "/docs/clickhouse/overview",
+    icon: {
+      light: {
+        path: "/public/svg/clickhouse-light.svg",
+        style: {
+          width: 18,
+        },
+      },
+      dark: {
+        path: "/public/svg/clickhouse-dark.svg",
+        style: {
+          width: 18,
+          fill: "#f0f0f0",
+        },
+      },
+    },
+  },
+  {
     id: "gel",
     name: "Gel",
     path: "/docs/gel/overview",

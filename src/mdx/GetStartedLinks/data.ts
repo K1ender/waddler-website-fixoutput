@@ -218,6 +218,34 @@ export const getStartedItems: GetStartedItems = [
       },
     ],
   },
+    {
+    title: "ClickHouse",
+    items: [
+      {
+        name: "ClickHouse",
+        path: {
+          existing: "/docs/clickhouse/get-started/clickhouse-existing",
+          new: "/docs/clickhouse/get-started/clickhouse-new",
+        },
+        icon: {
+          light: {
+            path: "/public/svg/clickhouse-light.svg",
+            style: {
+              width: 22,
+              height: 22,
+            },
+          },
+          dark: {
+            path: "/public/svg/clickhouse-dark.svg",
+            style: {
+              width: 22,
+              height: 22,
+            },
+          },
+        },
+      },
+    ],
+  },
   {
     title: "Gel",
     items: [

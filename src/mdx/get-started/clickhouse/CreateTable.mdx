@@ -1,0 +1,14 @@
+```typescript copy
+
+(async () => {
+  await sql.unsafe(`create table users(
+    id    Int32,
+    name  String,
+    age   Int32,
+    email String
+)
+engine = MergeTree
+order by id;
+  `).command();
+})()
+```
