@@ -6,9 +6,9 @@ import Prerequisites from '@mdx/Prerequisites.astro';
 
 # Waddler SQL values
 <Prerequisites>
-- Quick start with Waddler - [read here](/docs/mysql/get-started/mysql-new)
-- Waddler SQL template - [read here](/docs/mysql/sql-template)
-- `sql.identifier` - [read here](/docs/mysql/sql-identifier)
+- Quick start with Waddler - [read here](/docs/clickhouse/get-started/mysql-new)
+- Waddler SQL template - [read here](/docs/clickhouse/sql-template)
+- `sql.identifier` - [read here](/docs/clickhouse/sql-identifier)
 </Prerequisites>
 <br/>
 
@@ -39,7 +39,7 @@ insert into `users` (`name`, `email`, `age`) values ('Dan', 'dan@acme.com', 25),
 ```
 </Section>
 
-Waddler provides a convinient [`sql.default`](/docs/mysql/sql-default) for SQL `DEFAULT` values:
+Waddler provides a convinient [`sql.default`](/docs/clickhouse/sql-default) for SQL `DEFAULT` values:
 ```ts
 const values = sql.values([["Dan", sql.default], ["Alex", sql.default]])
 await sql`insert into \`users\` (\`name\`, \`created_at\`) values ${values}`;
@@ -48,7 +48,7 @@ await sql`insert into \`users\` (\`name\`, \`created_at\`) values ${values}`;
 insert into `users` (`name`, `created_at`) values ('Dan', default), ('Alex', default);
 ```
 
-Complete example with [`sql.identifier`](/docs/mysql/sql-identifier) and [`sql.default`](/docs/mysql/sql-default):
+Complete example with [`sql.identifier`](/docs/clickhouse/sql-identifier) and [`sql.default`](/docs/clickhouse/sql-default):
 <Section>
 ```ts
 const table = sql.identifier("users")

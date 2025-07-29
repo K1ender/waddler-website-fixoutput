@@ -1,0 +1,35 @@
+import Callout from '@mdx/Callout.astro';
+import Npm from '@mdx/Npm.astro';
+import Prerequisites from '@mdx/Prerequisites.astro';
+import CodeTabs from '@mdx/CodeTabs.astro';
+
+# Waddler chunked
+<Prerequisites>
+- Quick start with Waddler - [read here](/docs/get-started/clickhouse-new)
+- Waddler SQL template - [read here](/docs/clickhouse/sql-template)
+- Waddler Extensions - [read here](/docs/clickhouse/extensions)
+</Prerequisites>
+<br/>
+
+`.chunked()` lets you stream query result rows in chunks:
+
+```ts
+const result = sql`select * from users`.chunked(2);
+
+for await (const chunk of result) {
+  console.log(chunk);
+}
+```
+```shell
+[
+	{
+  	id: 1,
+		name: "Alex",
+	},
+	{
+	  id: 2,
+		name: "Oleksii",
+	}
+]
+…
+```
