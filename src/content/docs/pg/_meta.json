@@ -21,6 +21,8 @@
   ["sql-unsafe", "`sql.unsafe`"],
   ["sql-default", "`sql.default`"],
   ["sql-append", "`sql.append`"],
+  "---",
+  ["builder", "Standalone `sql`"],
   "extensions",
   ["query-stream", "query-stream"],
   "goodies",

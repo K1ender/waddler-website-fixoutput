@@ -16,6 +16,8 @@
   ["sql-default", "`sql.default`"],
   ["sql-append", "`sql.append`"],
   "---",
+  ["builder", "Standalone `sql`"],
+  "---",
   ["tosql", "`toSQL`"],
   ["stream", "`stream`"],
   ["chunked", "`chunked`"],
