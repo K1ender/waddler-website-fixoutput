@@ -19,6 +19,33 @@ const isActive = (path: string) => {
   return pathArray.every((element, index) => element === slugArray[index]);
 };
 
+// render title with the code block
+const renderTitleWithCode = (title: string) => {
+  if (!title.includes('`')) {
+    return title;
+  }
+
+  const parts = title.split('`');
+  const elements = [];
+  
+  // first part is alwyas text
+  for (let i = 0; i < parts.length; i++) {
+    // if index is even, it's text
+    if (i % 2 === 0) {
+      if (parts[i]) {
+        elements.push(parts[i]);
+      }
+    } else {
+      // if index is odd, it's code
+      if (parts[i]) {
+        elements.push(`<code>${parts[i]}</code>`);
+      }
+    }
+  }
+  
+  return elements.join('');
+};
+
 function modifyTree(tree: TreeNode[]): TreeNode[] {
   const modifiedTree: TreeNode[] = [];
   let currentCollapsableNode: TreeNode | null = null;
@@ -102,11 +129,7 @@ let i = 0;
                         ]}
                         href={getLink([t.name,n.name])}
                       >
-                        {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                          <code>{n.title.replaceAll('`', '')}</code>
-                        ) : (
-                          n.title
-                        )}
+                        <Fragment set:html={renderTitleWithCode(n.title)} />
                       </a>
                     )}
                     {n.type === "withDialects" && (
@@ -120,11 +143,7 @@ let i = 0;
                           "nav-item-1",
                         ]}
                       >
-                        {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                          <code>{n.title.replaceAll('`', '')}</code>
-                        ) : (
-                          n.title
-                        )}
+                        <Fragment set:html={renderTitleWithCode(n.title)} />
                       </a>
                     )}
                     {headings &&
@@ -194,11 +213,7 @@ let i = 0;
                 ]}
                 href={getLink([t.name,n.name])}
               >
-                {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                  <code>{n.title.replaceAll('`', '')}</code>
-                ) : (
-                  n.title
-                )}
+                <Fragment set:html={renderTitleWithCode(n.title)} />
               </a>
             )}
             {n.type === "withDialects" && (
@@ -212,11 +227,7 @@ let i = 0;
                   "nav-item-1",
                 ]}
               >
-                {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                  <code>{n.title.replaceAll('`', '')}</code>
-                ) : (
-                  n.title
-                )}
+                <Fragment set:html={renderTitleWithCode(n.title)} />
               </a>
             )}
             {headings &&
