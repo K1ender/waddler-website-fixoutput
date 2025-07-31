@@ -113,14 +113,20 @@ export const getContentTree = async (props: Props) => {
 
   Object.entries(metaFiles).forEach(([key, p]) => {
     const subDir = extractSubDirFromFilePath(key);
+    if (!subDir) {
+      filteredMetaFiles[key] = p;
+      return;
+    }
     if (
-      !subDir ||
       (subDir === "pg" && !subDirSlug) ||
-      subDirSlug === "get-started"
+      (subDir === "pg" && subDirSlug === "get-started")
     ) {
       filteredMetaFiles[key] = p;
-    } else if (subDir && subDirSlug && subDir === subDirSlug) {
+      return;
+    }
+    if (subDir && subDirSlug && subDir === subDirSlug) {
       filteredMetaFiles[key] = p;
+      return;
     }
   });
 
