@@ -1,0 +1,104 @@
+# Types Mapping
+
+Waddler parametrizes queries before sending them to the database.
+
+When you pass parameters using `${...}`, `sql.param` or `sql.values`,  each one is replaced in the query by a placeholder of the form `{<parameter name>:<database type>}` 
+and a corresponding entry `{<parameter name>:<parameter value>}` will be added to the parameters object.
+
+For full list of database types, see https://clickhouse.com/docs/sql-reference/data-types .
+
+### `${...}`
+
+For queries like this:
+```ts
+await sql`select ${-2_147_483_648} as min_int32;`
+
+// query: "select {param1:Int32} as min_int32;"
+// params: { "param1": -2147483648 }
+```
+In this example, the `${...}` syntax is used to specify a parameter in the query, 
+and the `{param1:Int32}` notation represents that parameter in the parametrized query. 
+
+Specifying `Int32` as the `database type` indicates that the parameter should be sent to the database as an `Int32`.
+
+The mapping from JavaScript values to database types during query parameterization is as follows:
+|  | Value category                       | Example                              | `<database type>`
+|:-| :--------                            | :--------                            | :--------    
+|  | `integers (within 32-bit range)`     |`${-2147483648}` or `${3}`            | `Int32`    
+|  | `53-bit integers (JS safe integers)` |`${1754055760745}`                    | `Int64`    
+|  | `bigint`                             |`${1754055760745n}` or `${BigInt(3)}` | `Int64`      
+|  | `one dimensional string array`       |`${['/', '/watch']}`                  | `Array(String)`    
+
+By default, any JavaScript values not covered above are sent as `String`.
+
+To override the inferred type, wrap your value with `sql.param(value, dbType)`.
+
+Example
+```ts {7}
+await sql`select * from students where height = ${185.5};`
+
+// query: "select * from students where height = {param1:String};"
+// params: { "param1": 185.5 }
+
+// sql.param
+await sql`select * from students where height = ${sql.param(185.5, 'Float32')};`
+
+// query: "select * from students where height = {param1:Float32};"
+// params: { "param1": 185.5 }
+```
+### `sql.values`
+
+For queries like this:
+```ts
+await sql`insert into users (id, name, age) values ${sql.values([[1, 'alex', 23]])};`
+
+// query: "insert into users (id, name, age) values ({param1:String},{param2:String},{param3:String});"
+// params: { "param1": 1, "param2": "alex", "param3": 23 }
+```
+
+The mapping from JavaScript values to database types during query parameterization is as follows:
+|  | Value category             | Example                                                         | `<database type>`
+|:-| :--------                  | :--------                                                       | :--------    
+|  | `json`                     |`${{ name: 'andrew', age: 25 }}`                                 | `JSON`    
+|  | `n dimensional json array` |`${[ { name: 'alex', age: 23 }, { name: 'oleksii', age: 23 } ]}` | `Array(JSON)`    
+
+Any JavaScript values not covered above default to `String`.
+
+To override the inferred types, pass an array of ClickHouse data types as the second argument to `sql.values`. For example:
+```ts
+sql.values([[row_values]], ['Int32', 'Float32'])
+```
+This array specifies the database type for each column value.
+If you omit it - or if it has fewer entries than columns - any missing types will default to `String`.
+
+Examples:
+```ts {6}
+await sql`insert into users (id, name, age) values ${sql.values([[1, 'alex', 23]])};`
+
+// query: "insert into users (id, name, age) values ({param1:String},{param2:String},{param3:String});"
+// params: { "param1": 1, "param2": "alex", "param3": 23 }
+
+await sql`insert into users (id, name, age) values ${sql.values([[1, 'alex', 23]], ['Int32', 'String', 'Int32'])};`
+
+// query: "insert into users (id, name, age) values ({param1:Int32},{param2:String},{param3:Int32});"
+// params: { "param1": 1, "param2": "alex", "param3": 23 }
+```
+
+```ts
+// omitting types
+await sql`insert into users (id, name, age) values ${sql.values([[1, 'alex', 23]], ['Int32', 'String'])};`
+
+// query: "insert into users (id, name, age) values ({param1:Int32},{param2:String},{param3:String});"
+// params: { "param1": 1, "param2": "alex", "param3": 23 }
+```
+
+```ts
+// omitting types
+const types: string[] = [];
+types[1] = 'FixedString(10)';
+
+await sql`insert into users (id, slug, age) values ${sql.values([[1, 'alex', 23]], types)};`
+
+// query: "insert into users (id, slug, age) values ({param1:String},{param2:FixedString(10)},{param3:String});"
+// params: { "param1": 1, "param2": "alex", "param3": 23 }
+```

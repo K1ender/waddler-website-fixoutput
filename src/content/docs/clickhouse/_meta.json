@@ -22,5 +22,6 @@
   ["stream", "`stream`"],
   ["chunked", "`chunked`"],
   "---",
-  ["types", "Types"]
+  ["types", "Types"],
+  ["types-mapping", "Types Mapping"]
 ]
