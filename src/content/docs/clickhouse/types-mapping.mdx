@@ -2,9 +2,6 @@
 
 Waddler parametrizes queries before sending them to the database.
 
-When you pass parameters using `${...}`, `sql.param` or `sql.values`,  each one is replaced in the query by a placeholder of the form `{<parameter name>:<database type>}` 
-and a corresponding entry `{<parameter name>:<parameter value>}` will be added to the parameters object.
-
 For full list of database types, see https://clickhouse.com/docs/sql-reference/data-types .
 
 ### `${...}`
@@ -16,22 +13,18 @@ await sql`select ${-2_147_483_648} as min_int32;`
 // query: "select {param1:Int32} as min_int32;"
 // params: { "param1": -2147483648 }
 ```
-In this example, the `${...}` syntax is used to specify a parameter in the query, 
-and the `{param1:Int32}` notation represents that parameter in the parametrized query. 
-
-Specifying `Int32` as the `database type` indicates that the parameter should be sent to the database as an `Int32`.
 
 The mapping from JavaScript values to database types during query parameterization is as follows:
 |  | Value category                       | Example                              | `<database type>`
 |:-| :--------                            | :--------                            | :--------    
-|  | `integers (within 32-bit range)`     |`${-2147483648}` or `${3}`            | `Int32`    
-|  | `53-bit integers (JS safe integers)` |`${1754055760745}`                    | `Int64`    
-|  | `bigint`                             |`${1754055760745n}` or `${BigInt(3)}` | `Int64`      
-|  | `one dimensional string array`       |`${['/', '/watch']}`                  | `Array(String)`    
+|  | `integers (within 32-bit range)`     |`${-2147483648}` or `${3}`            | `{param1:Int32}`    
+|  | `53-bit integers (JS safe integers)` |`${1754055760745}`                    | `{param1:Int64}`    
+|  | `bigint`                             |`${1754055760745n}` or `${BigInt(3)}` | `{param1:Int64}`      
+|  | `one dimensional string array`       |`${['/', '/watch']}`                  | `{param1:Array(String)}`    
 
-By default, any JavaScript values not covered above are sent as `String`.
+> By default, any JavaScript values not covered above are sent as `String`.
 
-To override the inferred type, wrap your value with `sql.param(value, dbType)`.
+To override the inferred type, wrap your value with `sql.param(value, dbType)`. Check [sql.param docs](/docs/clickhouse/sql-param) for more details
 
 Example
 ```ts {7}
