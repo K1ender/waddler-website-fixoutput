@@ -27,6 +27,7 @@
   ["query-stream", "query-stream"],
   "goodies",
   ["tosql", "`toSQL`"],
+  ["logging", "`logger`"],
   ["stream", "`stream`"],
   ["chunked", "`chunked`"],
   "---",
