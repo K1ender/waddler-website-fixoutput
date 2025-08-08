@@ -16,6 +16,7 @@
   ["builder", "Standalone `sql`"],
   "---",
   ["tosql", "`toSQL`"],
+  ["logger", "`logger`"],
   ["stream", "`stream`"],
   ["chunked", "`chunked`"],
   "---",

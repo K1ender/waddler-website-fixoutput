@@ -18,6 +18,7 @@
   ["builder", "Standalone `sql`"],
   "---",
   ["tosql", "`toSQL`"],
+  ["logger", "`logger`"],
   "---",
   ["types", "Types"],
   ["pooling", "Pooling"]
