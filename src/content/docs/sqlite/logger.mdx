@@ -17,7 +17,7 @@ const db = waddler({ logger: true });
 
 You can also create a custom logger:
 ```typescript copy
-import { Logger } from 'waddler/logger';
+import { Logger } from 'waddler';
 import { waddler } from 'waddler/...'; // driver specific
 
 class MyLogger implements Logger {
@@ -26,5 +26,100 @@ class MyLogger implements Logger {
   }
 }
 
-const db = drizzle({ logger: new MyLogger() });
+const db = waddler({ logger: new MyLogger() });
 ```
+
+## metadata
+<CodeTabs items={["better-sqlite3", "libsql", "d1", "bun-sqlite", "durable-sqlite"]}>
+{/* better-sqlite3 */}
+```ts
+// metadata returns only for `run` queries
+type metadataType = {
+  changes: number;
+  lastInsertRowid: number | bigint;
+}
+
+// metadata example
+{ changes: 0, lastInsertRowid: 0 }
+```
+
+{/* libsql */}
+```ts
+// metadata type
+type metadataType = {
+  columns: Array<string>;
+  columnTypes: Array<string>;
+  rowsAffected: number;
+  lastInsertRowid: bigint | undefined;
+}
+
+// metadata example
+{
+  columnTypes: [ '' ],
+  columns: [ '?' ],
+  lastInsertRowid: undefined,
+  rowsAffected: 0
+}
+```
+
+{/* d1 */}
+```ts
+// metadata returns only for `run` queries and `all` queries with `rowMode` equal to `object`
+type metadataType = {
+  success: true;
+  meta: {
+    duration: number;
+    size_after: number;
+    rows_read: number;
+    rows_written: number;
+    last_row_id: number;
+    changed_db: boolean;
+    changes: number;
+   
+    served_by_region?: string;
+    served_by_primary?: boolean;
+    timings?: {
+      sql_duration_ms: number;
+    };
+  } & Record<string, unknown>;
+  error?: never;
+}
+
+// metadata example
+{
+  success: true,
+  meta: {
+    duration: 0.03895799999997962,
+    last_row_id: 0,
+    changes: 0,
+    served_by: 'miniflare.db',
+    internal_stats: null
+  }
+}
+```
+
+{/* bun-sqlite */}
+```ts
+// metadata returns only for `run` queries
+type metadataType = {
+  changes: number;
+  lastInsertRowid: number | bigint;
+}
+
+// metadata example
+{ changes: 0, lastInsertRowid: 0 }
+```
+
+{/* durable-sqlite */}
+```ts
+// metadata type
+type metadataType = {
+  columnNames: string[];
+  get rowsRead(): number;
+  get rowsWritten(): number;
+}
+
+// metadata example
+{ columnNames: [ '?' ], rowsRead: 0, rowsWritten: 0 }
+```
+</CodeTabs>

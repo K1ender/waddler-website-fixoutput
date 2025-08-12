@@ -17,7 +17,7 @@ const db = waddler({ logger: true });
 
 You can also create a custom logger:
 ```typescript copy
-import { Logger } from 'waddler/logger';
+import { Logger } from 'waddler';
 import { waddler } from 'waddler/...'; // driver specific
 
 class MyLogger implements Logger {
@@ -26,5 +26,14 @@ class MyLogger implements Logger {
   }
 }
 
-const db = drizzle({ logger: new MyLogger() });
+const db = waddler({ logger: new MyLogger() });
 ```
+
+## metadata
+
+<CodeTabs items={["gel"]}>
+{/* gel */}
+```ts
+// driver does not return metadata
+```
+</CodeTabs>

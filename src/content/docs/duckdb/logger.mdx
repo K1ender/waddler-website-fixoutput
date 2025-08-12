@@ -17,7 +17,7 @@ const db = waddler({ logger: true });
 
 You can also create a custom logger:
 ```typescript copy
-import { Logger } from 'waddler/logger';
+import { Logger } from 'waddler';
 import { waddler } from 'waddler/...'; // driver specific
 
 class MyLogger implements Logger {
@@ -26,5 +26,62 @@ class MyLogger implements Logger {
   }
 }
 
-const db = drizzle({ logger: new MyLogger() });
+const db = waddler({ logger: new MyLogger() });
 ```
+
+## metadata
+
+<CodeTabs items={["duckdb-neo"]}>
+{/* duckdb-neo */}
+```ts
+// metadata type
+type metadataType = {
+  get returnType(): ResultReturnType;
+  get statementType(): StatementType;
+  get columnCount(): number;
+  get rowsChanged(): number;
+}
+
+// where ResultReturnType is
+enum ResultType {
+  INVALID = 0,
+  CHANGED_ROWS = 1,
+  NOTHING = 2,
+  QUERY_RESULT = 3,
+}
+// and StatementType is
+enum StatementType {
+  INVALID = 0,
+  SELECT = 1,
+  INSERT = 2,
+  UPDATE = 3,
+  EXPLAIN = 4,
+  DELETE = 5,
+  PREPARE = 6,
+  CREATE = 7,
+  EXECUTE = 8,
+  ALTER = 9,
+  TRANSACTION = 10,
+  COPY = 11,
+  ANALYZE = 12,
+  VARIABLE_SET = 13,
+  CREATE_FUNC = 14,
+  DROP = 15,
+  EXPORT = 16,
+  PRAGMA = 17,
+  VACUUM = 18,
+  CALL = 19,
+  SET = 20,
+  LOAD = 21,
+  RELATION = 22,
+  EXTENSION = 23,
+  LOGICAL_PLAN = 24,
+  ATTACH = 25,
+  DETACH = 26,
+  MULTI = 27,
+}
+
+// metadata example
+{ columnCount: 1, returnType: 3, rowsChanged: 0, statementType: 1 }
+```
+</CodeTabs>
