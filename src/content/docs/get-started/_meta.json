@@ -1,0 +1,10 @@
+[
+  ["postgresql-new", "PostgreSQL"],
+  ["neon-new", "PostgreSQL"],
+  ["supabase-new", "PostgreSQL"],
+  ["xata-new", "PostgreSQL"],
+  ["pglite-new", "PostgreSQL"],
+  ["nile-new", "PostgreSQL"],
+  ["vercel-new", "PostgreSQL"],
+  ["bun-sql-new", "PostgreSQL"]
+]

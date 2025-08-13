@@ -1,0 +1,137 @@
+import Npm from "@mdx/Npm.astro";
+import Callout from '@mdx/Callout.astro';
+import AnchorCards from '@mdx/AnchorCards.astro';
+import Steps from '@mdx/Steps.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+# Waddler \<\> Cloudflare Durable Objects SQLite
+
+<Prerequisites>
+- Database [connection basics](/docs/connect-overview) with Waddler
+- **Cloudflare SQLite Durable Objects** - SQLite database embedded within a Durable Object - [read here](https://developers.cloudflare.com/durable-objects/best-practices/access-durable-objects-storage/#sqlite-storage-backend)
+</Prerequisites>
+  
+Waddler fully supports the Cloudflare Durable Objects database and Cloudflare Workers environment.
+We embrace SQL dialects and dialect specific drivers and syntax and mirror
+SQLite-like `all`, `run` query methods syntax.
+
+To setup project for your Cloudflare Durable Objects please refer to **[official docs.](https://developers.cloudflare.com/durable-objects)**
+
+#### Step 1 - Install packages
+<Npm>
+waddler
+</Npm>
+
+#### Step 2 - Initialize the driver and make a query
+
+You would need to have a `wrangler.toml` file for Durable Objects database and will look something like this:
+```toml {16-18,21-24}
+#:schema node_modules/wrangler/config-schema.json
+name = "sqlite-durable-objects"
+main = "src/index.ts"
+compatibility_date = "2024-11-12"
+compatibility_flags = [ "nodejs_compat" ]
+
+# Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
+# Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#durable-objects
+[[durable_objects.bindings]]
+name = "MY_DURABLE_OBJECT"
+class_name = "MyDurableObject"
+
+# Durable Object migrations.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#migrations
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["MyDurableObject"]
+```
+
+Make your first Durable Objects SQLite query:
+```typescript copy
+/// <reference types="@cloudflare/workers-types" />
+import { type DurableSqliteSQL, waddler } from 'waddler/durable-sqlite';
+import { DurableObject } from 'cloudflare:workers'
+
+export class MyDurableObject extends DurableObject {
+	sql: DurableSqliteSQL;
+
+	constructor(ctx: DurableObjectState, env: Env) {
+		super(ctx, env);
+		
+		this.sql = waddler({ client: this.ctx.storage });
+
+		// Make sure all table creations complete before accepting queries.
+		ctx.blockConcurrencyWhile(async () => {
+			await this.createTable();
+		});
+	}
+
+	async insertAndList(user: any[]) {
+		await this.insert(user);
+		return this.select();
+	}
+
+	async insert(user: any[]) {
+		await this.sql`
+    		insert into ${this.sql.identifier('users')}(${this.sql.identifier(['name', 'age', 'email'])}) 
+      		values ${this.sql.values([user])};
+  		`.run();
+	}
+
+	async select(): Promise<any[]> {
+		const users = await this.sql`select * from ${this.sql.identifier('users')};`.all();
+		return users;
+	}
+
+	async createTable() {
+		await this.sql.unsafe(`create table if not exists users (
+    			id    integer primary key autoincrement,
+    			name  text    not null,
+    			age   integer not null,
+    			email text    not null unique
+    		);
+  		`).run();
+	}
+}
+
+export default {
+	/**
+	 * This is the standard fetch handler for a Cloudflare Worker
+	 *
+	 * @param request - The request submitted to the Worker from the client
+	 * @param env - The interface to reference bindings declared in wrangler.toml
+	 * @param ctx - The execution context of the Worker
+	 * @returns The response to be sent back to the client
+	 */
+	async fetch(request: Request, env: Env): Promise<Response> {
+		const id = env.MY_DURABLE_OBJECT.idFromName(new URL(request.url).pathname);
+		const stub = env.MY_DURABLE_OBJECT.get(id);
+
+		// Option A - Maximum performance.
+		// Prefer to bundle all the database interaction within a single Durable Object call
+		// for maximum performance, since database access is fast within a DO.
+		const usersAll = await stub.insertAndList([
+			'John',
+			30,
+			'johnA@example.com',
+		]);
+		console.log('New user created. Getting all users from the database:', usersAll);
+
+		// Option B - Slow but maybe useful sometimes for debugging.
+		// You can also directly call individual Waddler queries if they are exposed
+		// but keep in mind every query is a round-trip to the Durable Object instance.
+		await stub.insert([
+			'John',
+			30,
+			'johnB@example.com',
+		]);
+		console.log('New user created!');
+
+		const users = await stub.select();
+		console.log('Getting all users from the database:', users);
+
+		return Response.json(users);
+	}
+}
+```

@@ -1,0 +1,32 @@
+import Callout from '@mdx/Callout.astro';
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+<CodeTabs items={['clickhouse', 'clickhouse with config', 'your clickhouse driver']}>
+```typescript copy
+import 'dotenv/config';
+import { waddler } from "waddler/clickhouse";
+
+const sql = waddler(process.env.DATABASE_URL!);
+```
+```typescript copy
+import 'dotenv/config';
+import { waddler } from "waddler/clickhouse";
+
+// You can specify any property from the clickhouse connection options
+const sql = waddler({ connection: { url: process.env.DATABASE_URL! }})
+// process.env.DATABASE_URL should look like this: http[s]://<user>:<password>@<host>:<port>/<database>;
+```
+```ts
+import { waddler } from "waddler/clickhouse";
+import { createClient } from '@clickhouse/client';
+  
+const client = createClient({
+  url: '...',
+  // url should have the following format: http[s]://<host>:<port>
+  user: 'user',
+  password: 'password',
+  database: 'database',
+});
+const sql = waddler({ client });
+```
+</CodeTabs>

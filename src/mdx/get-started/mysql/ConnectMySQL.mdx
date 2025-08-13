@@ -1,0 +1,41 @@
+import Callout from '@mdx/Callout.astro';
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+<CodeTabs items={['mysql2', 'mysql2 with config', 'your mysql2 driver']}>
+```typescript copy
+import 'dotenv/config';
+import { waddler } from "waddler/mysql2";
+
+const sql = waddler(process.env.DATABASE_URL);
+```
+```typescript copy
+import 'dotenv/config';
+import { waddler } from "waddler/mysql2";
+
+// You can specify any property from the mysql2 connection options
+const sql = waddler({ connection: { uri: process.env.DATABASE_URL }});
+```
+```ts
+import 'dotenv/config';
+import { waddler } from "waddler/mysql2";
+import mysql from "mysql2/promise";
+  
+const poolConnection = mysql.createPool({
+  host: "host",
+  user: "user",
+  database: "database",
+});
+const sql = waddler({ client: poolConnection });
+
+// or if you need client connection
+async function main() {
+  const connection = await mysql.createConnection({
+    host: "host",
+    user: "user",
+    database: "database",
+  });
+  const sql = waddler({ client: connection });
+}
+main();
+```
+</CodeTabs>

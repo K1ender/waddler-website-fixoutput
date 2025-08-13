@@ -1,0 +1,179 @@
+import Npm from '@mdx/Npm.astro';
+import Npx from '@mdx/Npx.astro';
+import Callout from '@mdx/Callout.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import Breadcrumbs from '@mdx/Breadcrumbs.astro';
+import FileStructure from '@mdx/get-started/FileStructure.mdx';
+import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
+import RunFile from '@mdx/get-started/RunFile.mdx';
+import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
+import CreateTable from '@mdx/get-started/sqlite/CreateTable.mdx';
+
+<Breadcrumbs/>
+
+# Get Started with Waddler and SQLite Durable Objects
+
+<Prerequisites>  
+  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
+  - **tsx** - package for running TypeScript files - [read here](https://tsx.is/)
+  - **Cloudflare SQLite Durable Objects** - SQLite database embedded within a Durable Object - [read here](https://developers.cloudflare.com/durable-objects/api/sql-storage/)
+  - **wrangler** - Cloudflare Developer Platform command-line interface - [read here](https://developers.cloudflare.com/workers/wrangler)
+</Prerequisites>
+
+<FileStructure />
+
+#### Step 1 - Install required packages
+<Npm>
+  waddler dotenv
+  -D wrangler @cloudflare/workers-types
+</Npm>
+
+#### Step 2 - Setup wrangler.toml
+
+You would need to have a `wrangler.toml` file in your project's root directory for D1 database. It should look like this::
+```toml
+#:schema node_modules/wrangler/config-schema.json
+name = "sqlite-durable-objects"
+main = "src/index.ts"
+compatibility_date = "2024-11-12"
+compatibility_flags = [ "nodejs_compat" ]
+
+# Bind a Durable Object. Durable objects are a scale-to-zero compute primitive based on the actor model.
+# Durable Objects can live for as long as needed. Use these when you need a long-running "server", such as in realtime apps.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#durable-objects
+[[durable_objects.bindings]]
+name = "MY_DURABLE_OBJECT"
+class_name = "MyDurableObject"
+
+# Durable Object migrations.
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#migrations
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["MyDurableObject"]
+```
+
+#### Step 3 - Connect Waddler to the database
+
+```ts
+/// <reference types="@cloudflare/workers-types" />
+import { type DurableSqliteSQL, waddler } from 'waddler/durable-sqlite';
+import { DurableObject } from 'cloudflare:workers'
+
+export class MyDurableObject extends DurableObject {
+	sql: DurableSqliteSQL;
+
+	constructor(ctx: DurableObjectState, env: Env) {
+		super(ctx, env);
+		this.sql = waddler({ client: ctx.storage });
+	}
+}
+```
+
+#### Step 4 - Generate wrangler types 
+
+<Npx>
+wrangler types
+</Npx>
+
+<Callout>
+The output of this command will be a `worker-configuration.d.ts` file.
+</Callout>
+
+#### Step 5 - Create a table
+
+<CreateTable/>
+
+#### Step 6 - Query the database
+
+```typescript copy filename="src/index.ts"
+/// <reference types="@cloudflare/workers-types" />
+import { type DurableSqliteSQL, waddler } from 'waddler/durable-sqlite';
+import { DurableObject } from 'cloudflare:workers'
+
+export class MyDurableObject extends DurableObject {
+	sql: DurableSqliteSQL;
+
+	constructor(ctx: DurableObjectState, env: Env) {
+		super(ctx, env);
+		this.sql = waddler({ client: ctx.storage });
+
+		// Ensure all tables are created before accepting queries.
+		ctx.blockConcurrencyWhile(async () => {
+			await this.createTable();
+		});
+	}
+
+	async insertAndList(user: any[]) {
+		await this.insert(user);
+		return this.select();
+	}
+
+	async insert(user: any[]) {
+		await this.sql`
+    		insert into ${this.sql.identifier('users')}(${this.sql.identifier(['name', 'age', 'email'])}) 
+      		values ${this.sql.values([user])};
+  		`.run();
+	}
+
+	async select(): Promise<any[]> {
+		const users = await this.sql`select * from ${this.sql.identifier('users')};`.all();
+		return users;
+	}
+
+	async createTable() {
+		await this.sql.unsafe(`create table if not exists users (
+    		id    integer primary key autoincrement,
+    		name  text    not null,
+    		age   integer not null,
+    		email text    not null unique
+    		);
+  		`).run();
+	}
+}
+
+export default {
+	/**
+	 * This is the standard fetch handler for a Cloudflare Worker
+	 *
+	 * @param request - The request submitted to the Worker from the client
+	 * @param env - The interface to reference bindings declared in wrangler.toml
+	 * @param ctx - The execution context of the Worker
+	 * @returns The response to be sent back to the client
+	 */
+	async fetch(request, env: Env): Promise<Response> {
+		const id = env.MY_DURABLE_OBJECT.idFromName(new URL(request.url).pathname);
+
+		const stub = env.MY_DURABLE_OBJECT.get(id);
+
+		await stub.allTypesInSqlUnsafe();
+		await stub.allTypesInSqlValues();
+		await stub.sqlStream();
+
+		// Option A - Maximum performance.
+		// Prefer to bundle all the database interaction within a single Durable Object call
+		// for maximum performance, since database access is fast within a DO.
+		const usersAll = await stub.insertAndList([
+			'John',
+			30,
+			'johnA@example.com',
+		]);
+		console.log('New user created. Getting all users from the database:', usersAll);
+
+		// Option B - Slow but maybe useful sometimes for debugging.
+		// You can also directly call individual queries if they are exposed
+		// but keep in mind every query is a round-trip to the Durable Object instance.
+		await stub.insert([
+			'John',
+			30,
+			'johnB@example.com',
+		]);
+		console.log('New user created!');
+
+		const users = await stub.select();
+		console.log('Getting all users from the database:', users);
+
+		return Response.json(users);
+	},
+}
+```

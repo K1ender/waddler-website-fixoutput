@@ -1,0 +1,38 @@
+Let's **update** the `src/index.ts` file with queries to create, read, update, and delete users
+
+```typescript copy filename="src/index.ts"
+import 'dotenv/config';
+import { waddler } from 'waddler/clickhouse';
+  
+const sql = waddler(process.env.DATABASE_URL!);
+
+async function main() {
+  const user = [
+    'John',
+    30,
+    'john@example.com',
+  ];
+
+  await sql`insert into ${sql.identifier('users')} values ${sql.values([[sql.default, ...user]])};`.command();
+  console.log('New user created!')
+
+  const users = await sql`select * from ${sql.identifier('users')};`.query();
+  console.log('Getting all users from the database: ', users)
+  /*
+  const users: {
+    id: number;
+    name: string;
+    age: number;
+    email: string;
+  }[]
+  */
+
+  await sql`alter table ${sql.identifier('users')} update age = ${31} where email = ${user[2]};`.command();
+  console.log('User info updated!')
+
+  await sql`alter table ${sql.identifier('users')} delete where email = ${user[2]};`.command();
+  console.log('User deleted!')
+}
+
+main();
+```

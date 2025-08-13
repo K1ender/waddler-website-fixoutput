@@ -1,0 +1,186 @@
+import Npm from '@mdx/Npm.astro';
+import Npx from '@mdx/Npx.astro';
+import Callout from '@mdx/Callout.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import Breadcrumbs from '@mdx/Breadcrumbs.astro';
+import FileStructure from '@mdx/get-started/FileStructure.mdx';
+import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
+import QueryDatabase from '@mdx/get-started/QueryDatabase.mdx';
+import RunFile from '@mdx/get-started/RunFile.mdx';
+import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
+import CreateTable from '@mdx/get-started/sqlite/CreateTable.mdx';
+
+<Breadcrumbs/>
+
+# Get Started with Waddler and OP-SQLite
+
+<Prerequisites>  
+  - **OP-SQLite** - SQLite library for react-native - [read here](https://github.com/OP-Engineering/op-sqlite)
+</Prerequisites>
+
+
+#### Step 1 - Setup a project from Expo Template
+<Npx>
+create-expo-app --template blank-typescript
+</Npx>
+
+You can read more about this template [here](https://docs.expo.dev/more/create-expo/#create-a-new-project).
+
+#### Basic file structure
+
+```plaintext
+📦 <project root>
+ ├ 📂 assets
+ ├ 📜 .gitignore
+ ├ 📜 .npmrc
+ ├ 📜 app.json
+ ├ 📜 App.tsx
+ ├ 📜 babel.config.ts
+ ├ 📜 index.ts
+ ├ 📜 package.json
+ └ 📜 tsconfig.json
+```
+
+#### Step 2 - Install required packages
+<Npm>
+  waddler @op-engineering/op-sqlite
+</Npm>
+
+#### Step 3 - Connect Waddler to the database
+
+Create a `App.tsx` file in the root directory and initialize the connection:
+
+```ts
+import { open } from '@op-engineering/op-sqlite';
+import { waddler } from 'waddler/op-sqlite';
+
+const client = open({
+  name: 'inMemoryDb',
+  location: ':memory:',
+});
+const sql = waddler({ client });
+```
+
+#### Step 4 - Create a table
+
+<CreateTable/>
+
+#### Step 5 - Setup `babel` config
+```js copy filename="babel.config.js"
+module.exports = function(api) {
+	api.cache(true);
+	return {
+		presets: ['babel-preset-expo'],
+		plugins: [
+			'@babel/plugin-transform-class-static-block',
+			['inline-import'],
+		],
+	};
+};
+```
+
+#### Step 6 - Query your db:
+
+Let's update **App.tsx** file with queries to create, insert and read users.
+
+```ts copy
+import { Text, View } from 'react-native';
+import { open } from '@op-engineering/op-sqlite';
+import { useEffect, useState } from 'react';
+import { waddler } from 'waddler/op-sqlite';
+
+const client = open({
+  name: 'inMemoryDb',
+  location: ':memory:',
+});
+const sql = waddler({client});
+
+export default function App() {
+  const [items, setItems] = useState<{[columnName: string]: any}[] | null>(null);
+
+  useEffect(() => {
+
+    (async () => {
+      await sql.unsafe(`create table if not exists users (
+	    	id    integer primary key autoincrement,
+	    	name  text    not null,
+	    	age   integer not null,
+	    	email text    not null unique
+	    	);
+	  	`).run();
+
+	    const user = [
+	    	'John',
+	    	30,
+	    	'john@example.com',
+	  	];
+
+	  	await sql`
+	    	insert into ${sql.identifier('users')}(${sql.identifier(['name', 'age', 'email'])}) 
+	      	values ${sql.values([user])};
+	  	`.run();
+	  	console.log('New user created!')
+
+	  	const users = await sql`select * from ${sql.identifier('users')};`.all();
+	  	console.log('Getting all users from the database:', users)
+	  	/*
+	  	const users: {
+	  	  id: number;
+	  	  name: string;
+	  	  age: number;
+	  	  email: string;
+	  	}[]
+	  	*/
+
+      setItems(users);
+    })();
+  });
+
+  if (items === null || items.length === 0) {
+    return (
+      <View>
+        <Text>Empty</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
+      {items.map((item) => (
+        <Text key={item.id}>{item.email}</Text>
+      ))}
+    </View>
+  );
+}
+```
+
+#### Step 7 - Prebuild and run expo app
+
+<Callout title='tips'>
+To run your app on the iOS Simulator, launch Xcode, install the iOS component in Settings, and then execute the command below.
+</Callout>
+
+<CodeTabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+```bash copy
+npx expo run:ios
+```
+```bash copy
+yarn expo run:ios
+```
+```bash copy
+pnpm expo run:ios
+```
+```bash copy
+bun expo run:ios
+```
+</CodeTabs>

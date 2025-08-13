@@ -2,24 +2,22 @@
 import type { IHeading, TreeNode } from '@/types';
 import SidebarContentWrap from './components/SidebarContentWrap.astro';
 import ThemeSelectorMobile from './components/ThemeSelectorMobile.astro';
-import AsideSocials from './components/AsideSocials.astro';
-
-
+import DbSwitcher from '../mdx/DbSwitcher/index.astro';
 
 interface Props {
   tree: TreeNode[];
   headings: IHeading[];
   forLanding?: boolean;
-  customSlug?: string;
 }
 
 const { slug } = Astro.params;
-const { tree, headings, forLanding, customSlug } = Astro.props;
+const { tree, headings, forLanding } = Astro.props;
 ---
 
 <div class="aside invisible" id="aside">
   <div class="aside-content aside-scroll scrollbar">
-    <SidebarContentWrap filteredHeadings={headings} slug={customSlug || slug} tree={tree} forLanding={forLanding} />
+    <DbSwitcher slug={slug!} />
+    <SidebarContentWrap filteredHeadings={headings} slug={slug} tree={tree} forLanding={forLanding} />
     <ThemeSelectorMobile />
     <!-- <AsideSocials /> -->
   </div>
@@ -54,7 +52,7 @@ const { tree, headings, forLanding, customSlug } = Astro.props;
 
   .aside-scroll {
     height: calc(100dvh - 64px);
-    padding: 0 16px 80px 0;
+    padding: 0 16px 64px 0;
     overscroll-behavior: contain;
   }
 

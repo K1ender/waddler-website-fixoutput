@@ -1,0 +1,91 @@
+import Npm from '@mdx/Npm.astro';
+import Npx from '@mdx/Npx.astro';
+import Callout from '@mdx/Callout.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import Breadcrumbs from '@mdx/Breadcrumbs.astro';
+import FileStructure from '@mdx/get-started/FileStructure.mdx';
+import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
+import RunFile from '@mdx/get-started/RunFile.mdx';
+import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
+import CreateTable from '@mdx/get-started/sqlite/CreateTable.mdx';
+
+<Breadcrumbs/>
+
+# Get Started with Waddler and D1
+
+<Prerequisites>  
+  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
+  - **tsx** - package for running TypeScript files - [read here](https://tsx.is/)
+  - **Cloudflare D1** - Serverless SQL database to query from your Workers and Pages projects - [read here](https://developers.cloudflare.com/d1/)
+  - **wrangler** - Cloudflare Developer Platform command-line interface - [read here](https://developers.cloudflare.com/workers/wrangler)
+</Prerequisites>
+
+<FileStructure />
+
+#### Step 1 - Install required packages
+<InstallPackages lib=''/>
+
+#### Step 2 - Setup wrangler.toml
+
+You would need to have a `wrangler.toml` file for D1 database and will look something like this:
+```toml
+name = "YOUR PROJECT NAME"
+main = "src/index.ts"
+compatibility_date = "2022-11-07"
+node_compat = true
+
+[[ d1_databases ]]
+binding = "DB"
+database_name = "YOUR DB NAME"
+database_id = "YOUR DB ID"
+```
+
+#### Step 3 - Connect Waddler to the database
+
+```typescript copy
+import { waddler } from 'waddler/d1';
+
+export interface Env {
+  <BINDING_NAME>: D1Database;
+}
+export default {
+  async fetch(request: Request, env: Env) {
+    const sql = waddler({ client: env.<BINDING_NAME> });
+  },
+};
+```
+
+#### Step 4 - Create a table
+
+<CreateTable/>
+
+#### Step 5 - Seed and Query the database
+
+```typescript copy
+import { waddler } from 'waddler/d1';
+
+export interface Env {
+  <BINDING_NAME>: D1Database;
+}
+export default {
+  async fetch(request: Request, env: Env) {
+    const sql = waddler({ client: env.<BINDING_NAME> });
+    const user = [
+      'John',
+      30,
+      'john@example.com',
+    ];
+
+    await sql`insert into ${sql.identifier('users')}(${sql.identifier(['name', 'age', 'email'])}) values ${sql.values([user])};`;
+    console.log('New user created!')
+
+    const users = await sql`select * from ${sql.identifier('users')};`;
+    return Response.json(users);
+  },
+};
+```
+
+#### Step 6 - Run index.ts file
+
+<RunFile/>

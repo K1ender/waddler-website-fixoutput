@@ -5,31 +5,51 @@ import Link from '@mdx/Link.astro';
 
 import DocsLayout from '@/ui/DocsLayout.astro';
 import CustomHeader from '@/ui/components/CustomHeader.astro';
+import { getEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const metaFiles = await import.meta.glob('../content/**/*.json');
-  const slugs: string[] = [];
-  const regex = /\.\.\/content\/(.*?)\/_meta\.json/;
-  
-  for(const meta in metaFiles) {
-    const {default: parsed} = await metaFiles[meta]() as any;
+  const regex = /\.\.\/content\/docs\/(.*?)\/_meta\.json/;
 
+  const subDirs: string[] = [];
+  let rootMeta = '';
+  for(const meta in metaFiles) {
     const metaSlug = meta.match(regex);
     if (metaSlug) {
-      const extractedText = metaSlug[1];
-      parsed.forEach((key) => {
-        if(Array.isArray(key)) {
-          slugs.push(`${extractedText}/${key[0]}`);
-        }
-      })
+      if (metaSlug[1] !== 'get-started' && metaSlug[1] !== 'pg') subDirs.push(metaSlug[1]);
+    } else {
+      rootMeta = meta;
     }
   }
-  const blogEntries = await getCollection("docs", (entry) => {
-    return slugs.includes(`docs/${entry.slug}`);
+
+  const extraSubDirEntries = [];
+  if (rootMeta) {
+    const {default: parsed} = await metaFiles[rootMeta]() as any;
+    for(const subDir of subDirs) {
+      for (const key of parsed) {
+        if (Array.isArray(key)) {
+          const entry = await getEntry('docs', key[0]);
+          if (entry) extraSubDirEntries.push({subDir, entry});
+        }
+      }
+    }
+  }
+
+  const blogEntriesWithoutPg = await getCollection("docs", (entry) => {
+    return !entry.slug.includes('pg/');
   });
-  return blogEntries.map(entry => ({
+
+  const pgEntries = await getCollection("docs", (entry) => {
+    return entry.slug.includes('pg/');
+  });
+
+  return [...blogEntriesWithoutPg.map(entry => ({
     params: { slug: `docs/${entry.slug}` }, props: { entry, frontmatter: entry.data },
-  }));
+  })), ...extraSubDirEntries.map(({subDir, entry }) => ({
+    params: { slug: `docs/${subDir}/${entry.slug}` }, props: { entry, frontmatter: entry.data },
+  })), ...pgEntries.map(entry => ({
+    params: { slug: `docs/${entry.slug.replace('pg/', '')}` }, props: { entry, frontmatter: entry.data },
+  }))];
 }
 
 const { entry, frontmatter } = Astro.props;

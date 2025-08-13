@@ -1,24 +1,5 @@
 [
   "meet waddler",
   ["overview", "Overview"],
-  ["quick-start", "Quick Start"],
-  "---",
-  ["duckdb", "Waddler with DuckDB"],
-  ["motherduck", "Waddler with MotherDuck"],
-  "---",
-  ["sql-template", "`sql`"],
-  ["sql-identifier", "`sql.identifier`"],
-  ["sql-values", "`sql.values`"],
-  ["sql-raw", "`sql.raw`"],
-  ["sql-default", "`sql.default`"],
-  ["sql-append", "`sql.append`"],
-  "---",
-  ["tosql", "`toSQL`"],
-  ["stream", "`stream`"],
-  ["chunked", "`chunked`"],
-  "---",
-  ["types", "Types"],
-  ["pooling", "Pooling"],
-  "---",
-  ["bundle-deploy", "Bundle and deploy"]
+  ["get-started", "Get started"]
 ]

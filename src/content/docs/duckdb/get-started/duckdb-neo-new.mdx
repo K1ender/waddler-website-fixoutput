@@ -1,0 +1,82 @@
+import Tab from '@mdx/Tab.astro';
+import Tabs from '@mdx/Tabs.astro';
+import Npm from "@mdx/Npm.astro";
+import Callout from '@mdx/Callout.astro';
+import Steps from '@mdx/Steps.astro';
+import AnchorCards from '@mdx/AnchorCards.astro';
+import Breadcrumbs from '@mdx/Breadcrumbs.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import FileStructure from '@mdx/get-started/FileStructure.mdx';
+import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
+import ConnectDuckDB from '@mdx/get-started/duckdb/ConnectDuckDB.mdx'
+import CreateTableDuckDB from '@mdx/get-started/duckdb/CreateTableDuckDB.mdx'
+import RunFile from '@mdx/get-started/RunFile.mdx';
+import QueryDuckDB from '@mdx/get-started/duckdb/QueryDuckDB.mdx';
+import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
+
+<Breadcrumbs/>
+
+# Get Started with Waddler and DuckDB
+
+<Prerequisites>
+  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
+  - **tsx** - package for running TypeScript files - [read here](https://tsx.is/)
+  - **dukcdb-neo** - package for querying your DuckDB database - [read here](https://duckdb.org/docs/stable/clients/node_neo/overview)
+</Prerequisites>
+
+Waddler has native support for DuckDB connections with the `duckdb-neo` driver.
+
+
+<FileStructure/>
+
+#### Step 1 - Install **duckdb-neo** package
+<InstallPackages lib='@duckdb/node-api'/>
+
+#### Step 2 - Setup connection variables
+
+<SetupEnv env_variable='DATABASE_URL' />
+
+#### Step 3 - Connect Waddler to the database
+
+<ConnectDuckDB/>
+
+#### Step 4 - Create a table
+
+<CreateTableDuckDB />
+
+#### Step 5 - Seed and Query the database
+
+<QueryDuckDB dialect='duckdb-neo' connection_string='process.env.DATABASE_URL!'/>
+
+**Streaming**
+
+```typescript copy filename="src/index.ts"
+import 'dotenv/config';
+import { waddler } from 'waddler/duckdb-neo';
+
+async function main() {
+	const sql = waddler({ url: process.env.DATABASE_URL!, max: 10, accessMode: 'read_write' });
+
+	const stream = sql`select * from users;`.stream();
+
+	console.log('Streaming users one at a time from the database.')
+  for await (const user of stream) {
+      console.log(user)
+      /*
+      const user: {
+        id: number;
+        name: string;
+        age: number;
+        email: string;
+      }
+      */		
+	}
+}
+
+main();
+```
+
+#### Step 6 - Run index.ts file
+
+<RunFile/>

@@ -1,0 +1,114 @@
+import Tab from '@mdx/Tab.astro';
+import Tabs from '@mdx/Tabs.astro';
+import Npm from "@mdx/Npm.astro";
+import Npx from "@mdx/Npx.astro";
+import Callout from '@mdx/Callout.astro';
+import Steps from '@mdx/Steps.astro';
+import AnchorCards from '@mdx/AnchorCards.astro';
+import Breadcrumbs from '@mdx/Breadcrumbs.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import FileStructure from '@mdx/get-started/FileStructure.mdx';
+import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
+import ConnectGel from '@mdx/get-started/gel/ConnectGel.mdx'
+import RunFile from '@mdx/get-started/RunFile.mdx';
+import QueryDatabase from '@mdx/get-started/gel/QueryGel.mdx';
+import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
+
+<Breadcrumbs/>
+
+# Get Started with Waddler and Gel
+
+<Prerequisites>
+  - **tsx** - package for running TypeScript files - [read here](https://tsx.is/)
+  - **gel-js** - package for querying your Gel database - [read here](https://github.com/geldata/gel-js)
+</Prerequisites>
+
+Waddler has native support for Gel connections with the `gel` client.
+
+This is the basic file structure of the project.
+
+```plaintext
+📦 <project root>
+ ├ 📂 src
+ │ └ 📜 index.ts
+ ├ 📜 package.json
+ └ 📜 tsconfig.json
+```
+
+#### Step 1 - Install and init **Gel** project
+
+<Npx>
+gel project init
+</Npx>
+
+#### Step 2 - Define basic Gel schema
+
+In `dbschema/default.esdl` file add a basic Gel schema
+
+```esdl
+module default {
+    type users {
+        name: str;
+        required email: str;
+        age: int16;
+    }
+}
+```
+
+There's no need to manually declare a primary key on your object types.
+
+All object types automatically contain a property id of type UUID that's required, globally unique, readonly, and has an index on it. 
+
+The id is assigned upon creation and cannot be changed.
+
+#### Step 3 - Push Gel schema to the database
+
+Generate Gel migration file:
+```bash
+gel migration create
+```
+
+Apply Gel migrations to the database
+```bash
+gel migration apply
+```
+
+<Callout>
+Now you should have this file structure
+
+```plaintext
+📦 <project root>
+ ├ 📂 dbschema
+ │ ├ 📂 migrations
+ │ ├ 📜 default.esdl
+ │ └ 📜 scoping.esdl
+ ├ 📂 src
+ │ └ 📜 index.ts
+ ├ 📜 edgedb.toml
+ ├ 📜 package.json
+ └ 📜 tsconfig.json
+```
+</Callout>
+
+#### Step 4 - Install required packages
+<Npm>
+  waddler gel
+  -D tsx
+</Npm>
+
+#### Step 5 - Setup connection variables
+
+<SetupEnv env_variable='DATABASE_URL' />
+
+#### Step 6 - Connect Waddler to the database
+
+<ConnectGel />
+
+#### Step 7 - Query the database
+
+<QueryDatabase/>
+
+#### Step 8 - Run index.ts file
+
+<RunFile/>

@@ -1,0 +1,52 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+<CodeTabs items={["default", "node", "web", "http", "web sockets", "wasm"]}>
+```typescript copy
+import { waddler } from 'waddler/libsql';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/node';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/web';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/http';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/ws';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+```typescript copy
+import { waddler } from 'waddler/libsql/wasm';
+
+const sql = waddler({ connection: {
+  url: process.env.DATABASE_URL, 
+  authToken: process.env.DATABASE_AUTH_TOKEN 
+}});
+```
+</CodeTabs>

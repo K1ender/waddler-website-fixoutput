@@ -1,0 +1,13 @@
+```typescript copy
+
+(async () => {
+  await sql.unsafe(`CREATE TABLE users (
+				id serial,
+				name varchar(255) NOT NULL,
+        age int NOT NULL,
+        email varchar(255) NOT NULL UNIQUE,
+				CONSTRAINT PRIMARY KEY(id)
+			);
+    `);
+})()
+```

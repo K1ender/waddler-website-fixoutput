@@ -1,0 +1,50 @@
+import CodeWithProps from "@mdx/CodeWithProps.astro";
+
+Let's **update** the `src/index.ts` file with queries to create, read, update, and delete users
+
+<CodeWithProps dialect={props.dialect}>
+```typescript copy filename="src/index.ts"
+import 'dotenv/config';
+import { waddler } from 'waddler/$dialect$';
+import { createClient } from 'gel';
+
+const client = createClient({ dsn: process.env.DATABASE_URL!, tlsSecurity: 'insecure' });
+const sql = waddler({ client });
+
+async function main() {
+    const user = [
+      'John',
+      30,
+      'john@example.com',
+    ];
+
+    await sql`
+      insert into ${sql.identifier('users')}(${sql.identifier(['name', 'age', 'email'])}) 
+      values ${sql.values([user])};
+    `;
+    //   query: 'insert into "users"("name", "age", "email") values ($1, $2, $3);',
+    //   params: [ 'John', 30, 'john@example.com' ]
+    console.log('New user created!')
+
+    const users = await sql`select * from ${sql.identifier('users')};`;
+    console.log('Getting all users from the database:', users)
+    /*
+    const users: {
+      id: string;
+      __type__: string;
+      age: number;
+      email: string;
+      name: string;
+    }[]
+    */
+
+    await sql`update ${sql.identifier('users')} set age = ${31} where email = ${user[2]};`;
+    console.log('User info updated!')
+
+    await sql`delete from ${sql.identifier('users')} where email = ${user[2]};`;
+    console.log('User deleted!')
+}
+
+main();
+```
+</CodeWithProps>

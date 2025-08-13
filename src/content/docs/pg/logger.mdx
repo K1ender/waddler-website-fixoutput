@@ -1,0 +1,244 @@
+import Callout from '@mdx/Callout.astro';
+import Prerequisites from '@mdx/Prerequisites.astro';
+import CodeTabs from '@mdx/CodeTabs.astro';
+
+# Logging
+
+<Prerequisites>
+- Quick start with Waddler - [read here](/docs/get-started/postgresql-new)
+</Prerequisites>
+
+To enable default query logging, just pass `{ logger: true }` to the `waddler` initialization function:
+```typescript copy
+import { waddler } from 'waddler/...'; // driver specific
+
+const db = waddler({ logger: true });
+```
+
+You can also create a custom logger:
+```typescript copy
+import { Logger } from 'waddler';
+import { waddler } from 'waddler/...'; // driver specific
+
+class MyLogger implements Logger {
+  logQuery(query: string, params: unknown[], metadata?: any): void {
+    console.log({ query, params, metadata });
+  }
+}
+
+const db = waddler({ logger: new MyLogger() });
+```
+
+## metadata
+<CodeTabs items={["node-postgres", "postgres-js", "neon-http", "neon-serverless", "vercel-postgres", "xata-http", "pglite", "bun-sql"]}>
+{/* node-postgres */}
+```ts
+// metadata type
+type metadataType = {
+  command: string;
+  rowCount: number | null;
+  oid: number;
+  fields: {
+    name: string;
+    tableID: number;
+    columnID: number;
+    dataTypeID: number;
+    dataTypeSize: number;
+    dataTypeModifier: number;
+    format: string;
+  }[];
+}
+
+// also can include fields such as:
+// '_parsers', '_types', 'RowCtor', 'rowAsArray', '_prebuiltEmptyResultObject';
+
+// metadata example
+{
+  command: 'SELECT',
+  rowCount: 1,
+  oid: null,
+  fields: [
+    Field {
+      name: '?column?',
+      tableID: 0,
+      columnID: 0,
+      dataTypeID: 25,
+      dataTypeSize: -1,
+      dataTypeModifier: -1,
+      format: 'text'
+    }
+  ],
+  _parsers: [ [Function: noParse] ],
+  _types: { getTypeParser: [Function: getTypeParser] },
+  RowCtor: null,
+  rowAsArray: false,
+  _prebuiltEmptyResultObject: { '?column?': null }
+}
+```
+
+{/* postgres-js */}
+```ts
+// driver does not return metadata
+```
+
+{/* neon-http */}
+```ts
+// metadata type
+type metadataType = {
+  fields: {
+    name: string;
+    tableID: number;
+    columnID: number;
+    dataTypeID: number;
+    dataTypeSize: number;
+    dataTypeModifier: number;
+    format: string;
+  }[];
+  command: string;
+  rowCount: number;
+  rowAsArray: ArrayMode;
+}
+
+// metadata example
+{
+  command: 'SELECT',
+  fields: [
+    {
+      name: '?column?',
+      dataTypeID: 25,
+      tableID: 0,
+      columnID: 0,
+      dataTypeSize: -1,
+      dataTypeModifier: -1,
+      format: 'text'
+    }
+  ],
+  rowAsArray: false,
+  rowCount: 1
+}
+```
+
+{/* neon-serverless */}
+```ts
+// metadata type
+type metadataType = {
+  command: string;
+  rowCount: number | null;
+  oid: number;
+  fields: {
+    name: string;
+    tableID: number;
+    columnID: number;
+    dataTypeID: number;
+    dataTypeSize: number;
+    dataTypeModifier: number;
+    format: string;
+  }[];
+}
+
+// metadata example:
+{
+  command: 'SELECT',
+  fields: [
+    Field {
+      name: '?column?',
+      tableID: 0,
+      columnID: 0,
+      dataTypeID: 25,
+      dataTypeSize: -1,
+      dataTypeModifier: -1,
+      format: 'text'
+    }
+  ],
+  oid: null,
+  rowCount: 1
+}
+```
+
+{/* vercel-postgres */}
+```ts
+// metadata type
+type metadataType = {
+  command: string;
+  rowCount: number | null;
+  oid: number;
+  fields: {
+    name: string;
+    tableID: number;
+    columnID: number;
+    dataTypeID: number;
+    dataTypeSize: number;
+    dataTypeModifier: number;
+    format: string;
+  }[];
+}
+
+// also can include fields such as:
+// '_parsers', '_types', 'RowCtor', 'rowAsArray';
+
+// metadata example
+{
+  command: 'SELECT',
+  rowCount: 1,
+  oid: null,
+  fields: [
+    Field {
+      name: '?column?',
+      tableID: 0,
+      columnID: 0,
+      dataTypeID: 25,
+      dataTypeSize: -1,
+      dataTypeModifier: -1,
+      format: 'text'
+    }
+  ],
+  _parsers: [ [Function: noParse] ],
+  _types: { getTypeParser: [Function: getTypeParser] },
+  RowCtor: null,
+  rowAsArray: false
+}
+```
+
+{/* xata-http */}
+```ts
+// metadata type
+type metadataType = {
+  columns: Array<{
+    name: string;
+    type: string;
+  }>;
+  warning?: string;
+}
+
+// metadata example
+{
+  rows: undefined,
+	warning: undefined,
+	columns: [ { name: '?column?', type: 'text' } ]
+}
+```
+
+{/* pglite */}
+```ts
+// metadata type
+type metadataType = {
+  affectedRows?: number;
+  fields: {
+    name: string;
+    dataTypeID: number;
+  }[];
+  blob?: Blob;
+}
+
+// metadata example
+{ 
+  fields: [ { name: '?column?', dataTypeID: 25 } ],
+  affectedRows: 0 
+}
+```
+
+{/* bun-sql */}
+```ts
+// driver does not return metadata
+```
+</CodeTabs>

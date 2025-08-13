@@ -5,35 +5,26 @@ import Npm from '@mdx/Npm.astro';
 import Section from '@mdx/Section.astro';
 
 # Waddler
-Built by [drizzle team](https://drizzle.team)
 
-Waddler - is a thin SQL client on top of official DuckDB NodeJS driver with modern API inspired by [`postgresjs`](https://github.com/porsager/postgres) and based on ES6 Tagged Template Strings.
+Waddler - is a thin SQL client wrapper with modern API inspired by [`postgresjs`](https://github.com/porsager/postgres) and based on ES6 Tagged Template Strings.
 
+> You don't need to learn an api for db clients; just use the `sql` template tag for everything
 
-<Npm>
-waddler duckdb
-</Npm>
+Waddler is our vision of a modern, all-in-one client for any database dialect.
+It doesn't perform any specific mappings to or from a database, doesn't handle complex query building, and doesn't parse queries.
+Waddler simply unifies communication with your database using any client you 
+choose - whether it's a simple TCP connection or an HTTP-based DB client.
+
+We support all the dialects and drivers that [Drizzle](https://orm.drizzle.team/docs/get-started) supports
+
+You can check a full list of clients you can use - [here](/docs/get-started)
+
 ```ts
-import { waddler } from "waddler";
+import { waddler } from "waddler/...";
 
-const sql = waddler({ dbUrl: ":memory:" });
+const sql = waddler({ dbUrl: process.env.DATABASE_URL });
 
 await sql`select 1`;
-```
-
-Waddler has a baked in [database pooling](/docs/pooling) which unlocks full potential of hosted DuckDB services like [MotherDuck](https://motherduck.com/).
-It does create multiple database instances under the hood and lets you concurrently fetch data from the remote MotherDuck database.
-
-```ts
-import { waddler } from "waddler";
-
-const sql = waddler({ dbUrl: "md:?…", min: 1, max: 8 }); // MotherDuck connection URL
-
-// fetches concurrently
-const res = await Promise.all([
-	sql`select 1`,
-	sql`select 2`,
-]);
 ```
 
 Waddler API consists of `sql` template, `sql.identifier`, `sql.values` and `sql.raw` operators:
@@ -95,3 +86,4 @@ select * from "users" where "name" = 'Dan';
 select * from "users";
 ```
 </Section>
+

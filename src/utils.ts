@@ -88,6 +88,16 @@ interface Props {
   slug?: string;
 }
 
+const extractSubDirFromFilePath = (path: string): string | null => {
+  const match = path.match(/\.\/content\/docs\/([^/]+)\/_meta\.json$/);
+  return match ? match[1] : null;
+};
+
+export const extractSubDirFromSlug = (slug: string): string | null => {
+  const match = slug.match(/^docs\/([^/]+)\/.+/);
+  return match ? match[1] : null;
+};
+
 export const getContentTree = async (props: Props) => {
   const [metaFiles, mdxFiles] = await Promise.all([
     import.meta.glob<Array<string | string[]>>("./content/**/*.json"),
@@ -95,57 +105,73 @@ export const getContentTree = async (props: Props) => {
   ]);
 
   const mdxPaths = Object.keys(mdxFiles);
+  const subDirSlug = extractSubDirFromSlug(props.slug || "");
+  const filteredMetaFiles: Record<
+    string,
+    () => Promise<(string | string[])[]>
+  > = {};
 
-  const regex = /\.\/content\/docs\/_meta\.json/;
+  Object.entries(metaFiles).forEach(([key, p]) => {
+    const subDir = extractSubDirFromFilePath(key);
+    if (!subDir) {
+      filteredMetaFiles[key] = p;
+      return;
+    }
+    if (
+      (subDir === "pg" && !subDirSlug) ||
+      (subDir === "pg" && subDirSlug === "get-started")
+    ) {
+      filteredMetaFiles[key] = p;
+      return;
+    }
+    if (subDir && subDirSlug && subDir === subDirSlug) {
+      filteredMetaFiles[key] = p;
+      return;
+    }
+  });
 
   const navItems: SidebarItem[] = [];
 
   const getTypeOfFile = (value: string): SidebarItem["type"] => {
-    if (mdxPaths.includes(`./content/docs/${value}.mdx`)) {
-      return "mdx";
+    if (mdxPaths.some((path) => path.includes(`/get-started/${value}`))) {
+      return "empty";
     }
-    if (mdxPaths.some((path) => path.includes(value))) {
-      return "subDir";
-    }
-    return "empty";
+    return "mdx";
   };
 
-  for (const meta in metaFiles) {
-    const parsed: MetaItems = (await metaFiles[meta]()).default;
+  for (const meta in filteredMetaFiles) {
+    const parsed: MetaItems = (await filteredMetaFiles[meta]()).default;
 
-    const metaSlug = meta.match(regex);
-    if (metaSlug) {
-      parsed.forEach((key, i) => {
-        if (Array.isArray(key)) {
+    parsed.forEach((key, i) => {
+      if (Array.isArray(key)) {
+        navItems.push({
+          type: getTypeOfFile(`${key[0]}`),
+          title: key[1],
+          path: `docs/${key[0]}`,
+        });
+      }
+      if (typeof key === "string") {
+        if (key === "---") {
           navItems.push({
-            type: getTypeOfFile(`${key[0]}`),
-            title: key[1],
-            path: `docs/${key[0]}`,
+            type: "dot-separator",
+            title: "dot-separator",
+            path: `docs/${key}${i}`,
+          });
+        } else if (key.includes("::")) {
+          navItems.push({
+            type: "collapsable",
+            title: key.replace("::", ""),
+            path: `docs/${key}`,
+          });
+        } else {
+          navItems.push({
+            type: "separator",
+            title: key,
+            path: `docs/${key}`,
           });
         }
-        if (typeof key === "string") {
-          if (key === "---") {
-            navItems.push({
-              type: "dot-separator",
-              title: "dot-separator",
-              path: `docs/${key}${i}`,
-            });
-          } else if (key.includes("::")) {
-            navItems.push({
-              type: "collapsable",
-              title: key.replace("::", ""),
-              path: `docs/${key}`,
-            });
-          } else {
-            navItems.push({
-              type: "separator",
-              title: key,
-              path: `docs/${key}`,
-            });
-          }
-        }
-      });
-    }
+      }
+    });
   }
 
   const buildTree = (items: SidebarItem[]): TreeNode[] => {
@@ -170,14 +196,6 @@ export const getContentTree = async (props: Props) => {
       }
     }
 
-    const findDialects = (node: TreeNode) => {
-      if (node.children) {
-        node.children.forEach((child) => findDialects(child));
-      }
-    };
-
-    tree.forEach((node) => findDialects(node));
-
     return tree;
   };
 
@@ -188,38 +206,35 @@ export const getContentTree = async (props: Props) => {
       (heading) => heading.depth === 2 || heading.depth === 3,
     ) ?? [];
 
-  const findTitleBySlug = (
-    tree: TreeNode[],
-    slug: string,
-  ): string | undefined => {
-    const traverse = (
-      node: TreeNode,
-      currentSlug: string,
-    ): string | undefined => {
-      const currentPath = currentSlug
-        ? `${currentSlug}/${node.name}`
-        : node.name;
-      if (currentPath === slug) {
-        return node.title;
-      }
-      for (const child of node.children) {
-        const result = traverse(child, currentPath);
-        if (result !== undefined) {
-          return result;
-        }
-      }
-      return undefined;
-    };
-    for (const node of tree) {
-      const result = traverse(node, "");
-      if (result !== undefined) {
-        return result;
-      }
+  const findTitleBySlug = async (
+    slug?: string,
+  ): Promise<string | undefined> => {
+    if (!slug) return undefined;
+    const slugParts = slug.split("/");
+    const sliced = slugParts.slice(0, slugParts?.length - 1);
+    const lastSlugPart = slugParts[slugParts.length - 1];
+    const meta = metaFiles[`./content/${sliced.join("/")}/_meta.json`];
+    const rootMeta = metaFiles[`./content/docs/_meta.json`];
+    const pgMeta = metaFiles[`./content/docs/pg/_meta.json`];
+    if (meta) {
+      const [metaModule, rootMetaModule] = await Promise.all([
+        meta(),
+        rootMeta(),
+      ]);
+      const metaContent = metaModule?.default as string[][];
+      const rootMetaContent = rootMetaModule?.default as string[][];
+      const pgMetaContent = !subDirSlug
+        ? ((await pgMeta()).default as string[][])
+        : [];
+      const title = [...metaContent, ...rootMetaContent, ...pgMetaContent].find(
+        ([key]) => key === lastSlugPart,
+      )?.[1];
+      return title;
     }
     return undefined;
   };
 
-  const title = findTitleBySlug(tree, props.slug ?? "");
+  const title = await findTitleBySlug(props.slug);
 
   return {
     tree,

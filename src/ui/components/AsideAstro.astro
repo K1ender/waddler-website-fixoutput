@@ -1,7 +1,7 @@
 ---
 import type { IHeading, TreeNode } from "@/types";
 import CollapseToggleButton from "./CollapseToggleButton.astro";
-
+import { extractSubDirFromSlug } from "../../utils";
 
 interface Props {
   headings?: IHeading[];
@@ -10,12 +10,40 @@ interface Props {
   forLanding?: boolean;
 }
 
-
 const { headings, slug = "", tree, forLanding = false } = Astro.props;
+const subDir = extractSubDirFromSlug(slug);
+
 const isActive = (path: string) => {
   const pathArray = path.split("/");
-  const slugArray = slug.split("/");
+  const slugArray = `/${slug}`.split("/");
   return pathArray.every((element, index) => element === slugArray[index]);
+};
+
+// render title with the code block
+const renderTitleWithCode = (title: string) => {
+  if (!title.includes('`')) {
+    return title;
+  }
+
+  const parts = title.split('`');
+  const elements = [];
+  
+  // first part is alwyas text
+  for (let i = 0; i < parts.length; i++) {
+    // if index is even, it's text
+    if (i % 2 === 0) {
+      if (parts[i]) {
+        elements.push(parts[i]);
+      }
+    } else {
+      // if index is odd, it's code
+      if (parts[i]) {
+        elements.push(`<code>${parts[i]}</code>`);
+      }
+    }
+  }
+  
+  return elements.join('');
 };
 
 function modifyTree(tree: TreeNode[]): TreeNode[] {
@@ -51,6 +79,14 @@ const calculateMaxHeight = (items: TreeNode[]) => {
   }, {value: 0, counter: 0}).value + 61
 }
 
+const getLink = (params: string[]) => {
+  if (subDir && subDir !== 'get-started') {
+    const sliced = params.slice(1, params.length);
+    return `/docs/${subDir}/${sliced.join('/')}`;
+  } else {
+    return `/${params.join('/')}`;
+  }
+}
 
 const groupedTree = tree.map(t => ({...t, children: modifyTree(t.children)}));
 let i = 0;
@@ -60,18 +96,17 @@ let i = 0;
 <div class="nav-items">
   {
     groupedTree
-      .filter((t) => forLanding || isActive(t.name))
-      .map((t) =>
+      .map((t, i) =>
         t.children?.map((n) => (
           <Fragment key={n.name}>
             {n.type === "separator" && (
-              <div class="nav-separator">{n.title}</div>
+              <div class="nav-separator" style={i === 0 ? 'padding-top: 80px' : ''}>{n.title}</div>
             )}
             {n.type === "collapsable" && (
               <div
                 class={"nav-items-collapsable"}
                 id={n.title}
-                data-active-inner-item={n.items?.some(c => isActive(`${t.name}/${c.name}`)) ? 1 : 0}
+                data-active-inner-item={n.items?.some(c => isActive(getLink([t.name,c.name]))) ? 1 : 0}
                 style={`max-height: ${calculateMaxHeight(n.items!)}px`}
               >
                 <div class="nav-separator nav-separator-collapsable">
@@ -87,42 +122,34 @@ let i = 0;
                       <a
                         data-nav-index={i++}
                         class:list={[
-                          isActive(`${t.name}/${n.name}`)
+                          isActive(getLink([t.name,n.name]))
                             ? "nav-item--active"
                             : "nav-item",
                           "nav-item-1",
                         ]}
-                        href={`/${t.name}/${n.name}`}
+                        href={getLink([t.name,n.name])}
                       >
-                        {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                          <code>{n.title.replaceAll('`', '')}</code>
-                        ) : (
-                          n.title
-                        )}
+                        <Fragment set:html={renderTitleWithCode(n.title)} />
                       </a>
                     )}
                     {n.type === "withDialects" && (
                       <a
                         data-nav-index={i++}
-                        data-href={`/${t.name}/${n.name}`}
+                        data-href={getLink([t.name,n.name])}
                         class:list={[
-                          isActive(`${t.name}/${n.name}`)
+                          isActive(getLink([t.name,n.name]))
                             ? "nav-item--active"
                             : "nav-item",
                           "nav-item-1",
                         ]}
                       >
-                        {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                          <code>{n.title.replaceAll('`', '')}</code>
-                        ) : (
-                          n.title
-                        )}
+                        <Fragment set:html={renderTitleWithCode(n.title)} />
                       </a>
                     )}
                     {headings &&
                       slug &&
                       slug.split("/")[1] === n.name &&
-                      slug === `${t.name}/${n.name}` && (
+                      `/${slug}` === getLink([t.name,n.name]) && (
                         <div data-headings>
                           {headings.map((heading) => (
                             heading.text === '---' ? (
@@ -144,7 +171,7 @@ let i = 0;
                         {headings &&
                           slug &&
                           slug.split("/")[2] === c.name &&
-                          slug === `${t.name}/${n.name}/${c.name}` && (
+                          `/${slug}` === getLink([t.name,n.name, c.name]) && (
                             <div data-headings>
                               {headings.map((heading) => (
                                 heading.text === '---' ? (
@@ -179,42 +206,34 @@ let i = 0;
               <a
                 data-nav-index={i++}
                 class:list={[
-                  isActive(`${t.name}/${n.name}`)
+                  isActive(getLink([t.name,n.name]))
                     ? "nav-item--active"
                     : "nav-item",
                   "nav-item-1",
                 ]}
-                href={`/${t.name}/${n.name}`}
+                href={getLink([t.name,n.name])}
               >
-                {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                  <code>{n.title.replaceAll('`', '')}</code>
-                ) : (
-                  n.title
-                )}
+                <Fragment set:html={renderTitleWithCode(n.title)} />
               </a>
             )}
             {n.type === "withDialects" && (
               <a
                 data-nav-index={i++}
-                data-href={`/${t.name}/${n.name}`}
+                data-href={getLink([t.name,n.name])}
                 class:list={[
-                  isActive(`${t.name}/${n.name}`)
+                  isActive(getLink([t.name,n.name]))
                     ? "nav-item--active"
                     : "nav-item",
                   "nav-item-1",
                 ]}
               >
-                {n.title[0] === '`' && n.title[n.title.length - 1] === '`' ? (
-                  <code>{n.title.replaceAll('`', '')}</code>
-                ) : (
-                  n.title
-                )}
+                <Fragment set:html={renderTitleWithCode(n.title)} />
               </a>
             )}
             {headings &&
               slug &&
-              slug.split("/")[1] === n.name &&
-              slug === `${t.name}/${n.name}` && (
+              slug.split("/")[subDir ? 2 : 1] === n.name &&
+              `/${slug}` === getLink([t.name,n.name]) && (
                 <div data-headings>
                   {headings.map((heading) => (
                     heading.text === '---' ? (
@@ -236,7 +255,7 @@ let i = 0;
                 {headings &&
                   slug &&
                   slug.split("/")[2] === c.name &&
-                  slug === `${t.name}/${n.name}/${c.name}` && (
+                  `/${slug}` === getLink([t.name,n.name, c.name]) && (
                     <div data-headings>
                       {headings.map((heading) => (
                         heading.text === '---' ? (

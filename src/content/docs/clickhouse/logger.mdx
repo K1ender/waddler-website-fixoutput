@@ -1,0 +1,115 @@
+import Callout from '@mdx/Callout.astro';
+import Prerequisites from '@mdx/Prerequisites.astro';
+import CodeTabs from '@mdx/CodeTabs.astro';
+
+# Logging
+
+<Prerequisites>
+- Quick start with Waddler - [read here](/docs/get-started/clickhouse-new)
+</Prerequisites>
+
+To enable default query logging, just pass `{ logger: true }` to the `waddler` initialization function:
+```typescript copy
+import { waddler } from 'waddler/...'; // driver specific
+
+const db = waddler({ logger: true });
+```
+
+You can also create a custom logger:
+```typescript copy
+import { Logger } from 'waddler';
+import { waddler } from 'waddler/...'; // driver specific
+
+class MyLogger implements Logger {
+  logQuery(query: string, params: unknown[]): void {
+    console.log({ query, params });
+  }
+}
+
+const db = waddler({ logger: new MyLogger() });
+```
+
+## metadata
+
+<CodeTabs items={["clickhouse"]}>
+{/* clickhouse */}
+```ts
+// metadata type for queries:
+await sql`...`.query();
+await sql`...`;
+await sql.unsafe('...', [...]).query();
+await sql.unsafe('...', [...]);
+
+type metadataType = {
+  query_id?: string;
+  totals?: T;
+  extremes?: Record<string, any>;
+  meta?: Array<{
+      name: string;
+      type: string;
+  }>;
+  statistics?: {
+      elapsed: number;
+      rows_read: number;
+      bytes_read: number;
+  };
+  rows?: number;
+  rows_before_limit_at_least?: number;
+}
+
+// metadata example
+{
+	meta: [ { name: "_CAST(1, 'Int32')", type: 'Int32' } ],
+	rows: 1,
+	statistics: { elapsed: 0.013193458, rows_read: 1, bytes_read: 1 }
+}
+
+// metadata type for queries:
+await sql`...`.command();
+await sql.unsafe('...', [...]).command();
+
+type metadataType = {
+  query_id: string;
+  summary?: {
+    read_rows: string;
+    read_bytes: string;
+    written_rows: string;
+    written_bytes: string;
+    total_rows_to_read: string;
+    result_rows: string;
+    result_bytes: string;
+    elapsed_ns: string;
+    /** Available only after ClickHouse 24.9 */
+    real_time_microseconds?: string;
+  };
+  response_headers: Record<string, string | string[] | undefined>;
+}
+
+// metadata example
+{
+  query_id: '4e8e2236-149f-4a33-a475-ecfe988374ed',
+  summary: {
+    read_rows: '0',
+    read_bytes: '0',
+    written_rows: '0',
+    written_bytes: '0',
+    total_rows_to_read: '0',
+    result_rows: '0',
+    result_bytes: '0',
+    elapsed_ns: '11163000'
+  },
+  response_headers: {
+    'x-clickhouse-summary': '{"read_rows":"0","read_bytes":"0","written_rows":"0","written_bytes":"0","total_rows_to_read":"0","result_rows":"0","result_bytes":"0","elapsed_ns":"11163000"}',
+    date: 'Tue, 12 Aug 2025 01:57:59 GMT',
+    connection: 'Keep-Alive',
+    'content-type': 'text/plain; charset=UTF-8',
+    'access-control-expose-headers': 'X-ClickHouse-Query-Id,X-ClickHouse-Summary,X-ClickHouse-Server-Display-Name,X-ClickHouse-Format,X-ClickHouse-Timezone,X-ClickHouse-Exception-Code',
+    'x-clickhouse-server-display-name': 'b1fb20216212',
+    'transfer-encoding': 'chunked',
+    'x-clickhouse-query-id': '4e8e2236-149f-4a33-a475-ecfe988374ed',
+    'x-clickhouse-timezone': 'UTC',
+    'keep-alive': 'timeout=10, max=9999'
+  }
+}
+```
+</CodeTabs>

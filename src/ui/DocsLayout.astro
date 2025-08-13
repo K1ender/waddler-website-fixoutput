@@ -11,12 +11,11 @@ import EndOfContent from "./components/EndOfContent.astro";
 
 interface Props {
   customTitle?: string;
-  customSlug?: string;
   description?: string;
   headings: IHeading[];
 }
 
-const { customTitle, headings, description, customSlug } = Astro.props;
+const { customTitle, headings, description } = Astro.props;
 const { slug } = Astro.params;
 const { tree, filteredHeadings, title } = await getContentTree({
   headings,
@@ -38,7 +37,6 @@ const { tree, filteredHeadings, title } = await getContentTree({
       <div class="fixed-elements">
         <DocsSidebar
           tree={tree}
-          customSlug={customSlug}
           headings={filteredHeadings}
         />
         <div class="dialects-container"></div>

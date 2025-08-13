@@ -1,0 +1,28 @@
+Create a `index.ts` file in the `src/db` directory and initialize the connection:
+
+```typescript copy
+import { waddler } from "waddler/planetscale-serverless";
+
+const sql = waddler({ connection: {
+  host: process.env.DATABASE_HOST!,
+  username: process.env.DATABASE_USERNAME!,
+  password: process.env.DATABASE_PASSWORD!,
+}});
+
+// You can also connect to database using connection string
+// const sql = waddler(process.env.PLANETSCALE_CONNECTION_STRING!)
+```
+
+If you need to provide your existing driver
+```typescript copy"
+import { waddler } from "waddler/planetscale-serverless";
+import { Client } from "@planetscale/database";
+
+const client = new Client({
+  host: process.env.DATABASE_HOST!,
+  username: process.env.DATABASE_USERNAME!,
+  password: process.env.DATABASE_PASSWORD!,
+});
+
+const sql = waddler({ client: client });
+```

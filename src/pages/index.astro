@@ -12,7 +12,7 @@ import Showcase from "@/content/landing/showcase.mdx";
         <div class="landing__title">Waddler</div>
       </div>
       <div class="landing__description">
-        Modern DuckDB and MotherDuck client for JS and TS
+        Unify your database communication in JS and TS
       </div>
       <div class="landing__name-meaning">
        Built <a href="https://drizzle.team">by drizzle.team</a>
@@ -36,6 +36,20 @@ import Showcase from "@/content/landing/showcase.mdx";
         </svg>
       </a>
     </div>
+    <div class="landing__body">
+    Waddler is a database client wrapper that unifies database communication and enables
+    <b>all</b>* supported database clients to use an SQL template 
+    tag with consistent syntax, value escaping, helping prevent SQL 
+    injection and supporting common query-building scenarios.
+    <p style="font-size: 14px; font-style: italic;">
+    <br>* supported clients by waddler
+    </p>
+    <div class="landing__subbody">
+    You don't need to learn each driver's API, hunt for the features you need to build 
+    queries, or constantly write your own small utilities for parameterization, escaping, 
+    and so on. All of that is handled by the <b>sql``</b> template tag from Waddler
+    </div>
+    </div>
     <Showcase />
   </div>
   <script></script>
@@ -44,6 +58,14 @@ import Showcase from "@/content/landing/showcase.mdx";
       color: #e2e8f0;
     }
     html[class~="dark"] .landing__description {
+      color: #e2e8f0;
+    }
+
+    html[class~="dark"] .landing__body {
+      color: #e2e8f0;
+    }
+
+    html[class~="dark"] .landing__subbody {
       color: #e2e8f0;
     }
 
@@ -90,6 +112,20 @@ import Showcase from "@/content/landing/showcase.mdx";
       font-size: 20px;
       margin-top: 8px;
       font-weight: 600;
+    }
+
+    .landing__body {
+      width: 100%;
+      font-size: 20px;
+      margin-top: 0px;
+      font-weight: 400;
+    }
+
+    .landing__subbody {
+      width: 100%;
+      font-size: 20px;
+      margin-top: 12px;
+      font-weight: 400;
     }
 
     .landing__name-meaning {

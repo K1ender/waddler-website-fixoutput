@@ -1,0 +1,42 @@
+import Callout from '@mdx/Callout.astro';
+
+```typescript copy filename="index.ts"
+import { waddler } from 'waddler/postgres-js'
+
+async function main() {
+    const sql = waddler(process.env.DATABASE_URL!);
+}
+
+main();
+```
+If you need a synchronous connection, you can use our additional connection API, 
+where you specify a driver connection and pass it to the Waddler instance.
+
+```typescript copy filename="index.ts"
+import { waddler } from 'waddler/postgres-js'
+import postgres from 'postgres'
+
+async function main() {
+    const client = postgres(process.env.DATABASE_URL!)
+    const sql = waddler({ client });
+}
+
+main();
+```
+
+<Callout title='tips'>
+If you decide to use connection pooling via Supabase (described [here](https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler)), and have "Transaction" pool mode enabled, then ensure to turn off prepare, as prepared statements are not supported. 
+
+```typescript copy filename="index.ts"
+import { waddler } from 'waddler/postgres-js'
+import postgres from 'postgres'
+
+async function main() {
+    // Disable prefetch as it is not supported for "Transaction" pool mode 
+    const client = postgres(process.env.DATABASE_URL!, { prepare: false })
+    const sql = waddler({ client });
+}
+
+main();
+```
+</Callout>

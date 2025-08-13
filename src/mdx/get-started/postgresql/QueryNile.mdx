@@ -1,0 +1,58 @@
+import CodeWithProps from "@mdx/CodeWithProps.astro";
+
+Let's **update** the `src/index.ts` file with queries to create, read, update, and delete tenants and todos.
+
+<CodeWithProps dialect='node-postgres' env_variable='NILEDB_URL'>
+```typescript copy filename="src/index.ts"
+import 'dotenv/config';
+import {waddler} from 'waddler/node-postgres'
+import pg from 'pg';
+
+const {Client} = pg;
+
+const main = async () => {
+    const client = new Client(process.env['NILEDB_URL']!);
+    await client.connect();
+    const sql = waddler({client});
+
+    const tenant = {
+        name: 'AwesomeSauce Inc.',
+    };
+
+    await sql`insert into ${sql.identifier('tenants')}(${sql.identifier('name')}) values ${sql.values([[tenant.name]])};`;
+    console.log('New tenant created!')
+
+    const tenants = await sql<{id: string}>`select * from ${sql.identifier('tenants')};`;
+    console.log('Getting all tenants from the database:', tenants)
+
+    const todo = {
+        tenant_id: tenants[0]!.id,
+        title: 'Update pitch deck with AI stuff'
+    };
+
+    await sql`insert into ${sql.identifier('todos')}(${sql.identifier(['tenant_id', 'title'])}) values ${sql.values([[todo.tenant_id, todo.title]])};`;
+    console.log('New todo created!')
+
+    const todos = await sql<{id: string}>`select * from ${sql.identifier('todos')};`;
+    console.log('Getting all todos from the database:', todos)
+
+    await sql`SET nile.tenant_id = '${sql.raw(tenants[0]!.id)}';`;
+    console.log("Set tenant context");
+
+    // note the lack of tenant_id in the query
+    const tenant_todos = await sql`select * from ${sql.identifier('todos')};`;
+    console.log('Getting all todos from the tenant virtual database:', tenant_todos)
+
+    await sql`update ${sql.identifier('todos')} set ${sql.identifier('complete')} = true where ${sql.identifier({table: 'todos', column: 'id'})} = ${todos[0]!.id};`;
+    console.log('Todo marked as done!')
+
+    await sql`delete from ${sql.identifier('todos')} where ${sql.identifier({table: 'todos', column: 'id'})} = ${todos[0]!.id};`;
+    console.log('Todo deleted!')
+
+    await client.end();
+}
+
+main();
+
+```
+</CodeWithProps>

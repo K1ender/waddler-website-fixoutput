@@ -1,0 +1,88 @@
+import Tab from '@mdx/Tab.astro';
+import Tabs from '@mdx/Tabs.astro';
+import Npm from "@mdx/Npm.astro";
+import Callout from '@mdx/Callout.astro';
+import Steps from '@mdx/Steps.astro';
+import AnchorCards from '@mdx/AnchorCards.astro';
+import Breadcrumbs from '@mdx/Breadcrumbs.astro';
+import Prerequisites from "@mdx/Prerequisites.astro";
+import CodeTabs from "@mdx/CodeTabs.astro";
+import FileStructure from '@mdx/get-started/FileStructure.mdx';
+import InstallPackages from '@mdx/get-started/InstallPackages.mdx';
+import ConnectClickHouse from '@mdx/get-started/clickhouse/ConnectClickHouse.mdx'
+import CreateTable from '@mdx/get-started/clickhouse/CreateTable.mdx'
+import RunFile from '@mdx/get-started/RunFile.mdx';
+import QueryDatabase from '@mdx/get-started/clickhouse/QueryDatabase.mdx';
+import SetupEnv from '@mdx/get-started/SetupEnv.mdx';
+
+<Breadcrumbs/>
+
+# Get Started with Waddler and ClickHouse
+
+<Prerequisites>
+  - **dotenv** - package for managing environment variables - [read here](https://www.npmjs.com/package/dotenv)
+  - **tsx** - package for running TypeScript files - [read here](https://tsx.is/)
+  - **@clickhouse/client** - package for querying your ClickHouse database - [read here](https://github.com/ClickHouse/clickhouse-js)
+</Prerequisites>
+
+Waddler has native support for ClickHouse connections with the `@clickhouse/client` driver.
+
+<FileStructure/>
+
+#### Step 1 - Install **@clickhouse/client** package
+<InstallPackages lib='@clickhouse/client'/>
+
+#### Step 2 - Setup connection variables
+
+<SetupEnv env_variable='DATABASE_URL' />
+
+#### Step 3 - Connect Waddler to the database
+
+<ConnectClickHouse/>
+
+#### Step 4 - Create a table
+
+<CreateTable />
+
+#### Step 5 - Seed and Query the database
+
+<QueryDatabase/>
+
+
+**Streaming**
+
+```typescript copy filename="src/index.ts"
+import 'dotenv/config';
+import { createClient } from '@clickhouse/client';
+import { waddler } from 'waddler/clickhouse';
+
+async function main() {
+  const client = createClient({ url: process.env.DATABASE_URL! })
+  // process.env.DATABASE_URL should look like this: http[s]://<user>:<password>@<host>:<port>/<database>;
+
+	const sql = waddler({ client });
+
+	const stream = sql`select * from ${sql.identifier('users')};`.query().stream();
+
+	console.log('Streaming users one at a time from the database.')
+  for await (const user of stream) {
+    console.log(user)
+    /*
+    const user: {
+      id: number;
+      name: string;
+      age: number;
+      email: string;
+    }
+    */		
+	}
+
+	await client.close();
+}
+
+main();
+```
+
+#### Step 6 - Run index.ts file
+
+<RunFile/>

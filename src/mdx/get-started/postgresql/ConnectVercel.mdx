@@ -1,0 +1,43 @@
+import CodeTabs from "@mdx/CodeTabs.astro";
+
+```typescript copy
+import 'dotenv/config';
+import { waddler } from 'waddler/vercel-postgres';
+
+const sql = waddler();
+```
+
+If you need to provide your existing driver:
+
+```typescript copy
+import 'dotenv/config';
+import { sql as vercelSql } from '@vercel/postgres';
+import { waddler } from 'waddler/vercel-postgres';
+
+const sql = waddler({ client: vercelSql })
+```
+
+Or, if you prefer, provide the connection string yourself.
+
+<CodeTabs items={["client connection", "pool connection"]}>
+```typescript copy
+import 'dotenv/config';
+import { createClient } from '@vercel/postgres';
+import { waddler } from 'waddler/vercel-postgres';
+
+const client = createClient({ connectionString: process.env['VERCEL_CLIENT_CONNECTION_STRING']! });
+await client.connect();
+
+const sql = waddler({ client });
+```
+
+```typescript copy
+import 'dotenv/config';
+import { createPool } from '@vercel/postgres';
+import { waddler } from 'waddler/vercel-postgres';
+
+const pool = createPool({ connectionString: process.env['VERCEL_POOL_CONNECTION_STRING']! });
+
+const sql = waddler({ client: pool });
+```
+</CodeTabs>

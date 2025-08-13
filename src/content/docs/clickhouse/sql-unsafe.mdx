@@ -1,0 +1,25 @@
+import Section from '@mdx/Section.astro';
+import Callout from '@mdx/Callout.astro';
+import CodeTabs from '@mdx/CodeTabs.astro';
+import YoutubeCards from '@mdx/YoutubeCards.astro';
+import Prerequisites from '@mdx/Prerequisites.astro';
+
+# Waddler SQL unsafe
+<Prerequisites>
+- Quick start with Waddler - [read here](/docs/clickhouse/get-started/mysql-new)
+- Waddler SQL template - [read here](/docs/clickhouse/sql-template)
+- `sql.identifier` - [read here](/docs/clickhouse/sql-identifier)
+- `sql.raw` - [read here](/docs/clickhouse/sql-raw)
+</Prerequisites>
+<br/>
+
+`sql.unsafe` lets you use a client itself by providing sql string and params
+
+<Section>
+```ts
+const response = await sql.unsafe('select * from users where id = {param1:String}', { "param1": 10 });
+```
+```sql
+select * from users where id = {param1:String}; -- params: { "param1": 10 }
+```
+</Section>
